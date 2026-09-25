@@ -13,48 +13,62 @@
     background:#1a1510; color:#e8dcc8; user-select:none;
   }
 
-  /* === Палитра Dust 2 === */
+  /* === Палитра Dust 2 (светлее) === */
   :root {
-    --bg:      #1a1510;   /* тёмный песок */
-    --bg2:     #241e16;   /* песок темнее */
-    --bg3:     #2e261c;   /* песок светлее */
-    --border:  #3d3224;   /* граница — выжженное дерево */
-    --border2: #5c4d38;   /* граница поярче */
-    --sand:    #c4a878;   /* основной песочный */
-    --sand2:   #d9c49a;   /* светлый песок */
-    --sand3:   #8a7754;   /* тёмный песок */
-    --text:    #e8dcc8;   /* основной текст */
-    --text2:   #a8987a;   /* текст второй */
-    --text3:   #6b5f48;   /* текст третий */
-    --accent:  #b8563a;   /* выжженный красный (Terrorist) */
-    --accent2: #d46b4a;   /* красный светлее */
+    --bg:      #2a231b;   /* тёмный песок */
+    --bg2:     #352c22;   /* песок темнее */
+    --bg3:     #42382a;   /* песок светлее */
+    --border:  #5c4d38;   /* выжженное дерево */
+    --border2: #7a6850;   /* граница поярче */
+    --sand:    #d9c49a;   /* светлый песок */
+    --text:    #f0e6d2;   /* основной текст */
+    --text2:   #b8a888;   /* текст второй */
+    --text3:   #8a7754;   /* текст третий */
+    --accent:  #d46b4a;   /* выжженный красный */
+    --gold:    #e0b84a;   /* золото */
+    --gold2:   #ffd966;   /* золото светлее */
     --ct:      #4a6b8a;   /* синий CT */
-    --ct2:     #6b8fab;   /* синий светлее */
-    --gold:    #c49a3a;   /* золото / Covert */
-    --gold2:   #e0b84a;   /* золото светлее */
-    --green:   #5a7a4a;   /* зелёный */
+    --green:   #6fbf4a;
   }
 
-  /* === Фон — песчаная текстура === */
+  /* === Фон с деталями Dust 2 === */
   #bg {
     position:fixed; inset:0; z-index:0; pointer-events:none;
     background:
-      radial-gradient(ellipse 90% 60% at 50% 0%, rgba(196,168,120,0.08), transparent),
-      radial-gradient(ellipse 60% 40% at 20% 100%, rgba(184,86,58,0.06), transparent),
-      radial-gradient(ellipse 70% 50% at 85% 50%, rgba(74,107,138,0.05), transparent),
-      linear-gradient(180deg, #1a1510 0%, #241e16 100%);
+      radial-gradient(ellipse 90% 60% at 50% 0%, rgba(217,196,154,0.1), transparent),
+      radial-gradient(ellipse 60% 40% at 20% 100%, rgba(212,107,74,0.06), transparent),
+      linear-gradient(180deg, #2a231b 0%, #352c22 100%);
   }
+  
   /* Песчинки */
   .sand-dot {
-    position:absolute; width:1px; height:1px; background:var(--sand3); border-radius:50%;
-    opacity:.3; animation:sandFloat 20s infinite linear;
+    position:absolute; width:1px; height:1px; background:var(--sand); border-radius:50%;
+    opacity:.2; animation:sandFloat 20s infinite linear;
   }
   @keyframes sandFloat {
     0%   { transform:translate(0, 0); opacity:0; }
-    10%  { opacity:.4; }
-    90%  { opacity:.4; }
+    10%  { opacity:.3; }
+    90%  { opacity:.3; }
     100% { transform:translate(30px, -40px); opacity:0; }
   }
+
+  /* Деревянные ящики внизу (декор) */
+  .decor-crates {
+    position:absolute; bottom:0; left:0; right:0; height:80px;
+    display:flex; justify-content:space-around; align-items:flex-end;
+    padding:0 10px; pointer-events:none; z-index:0; opacity:0.4;
+  }
+  .crate {
+    width:60px; height:50px;
+    background:linear-gradient(180deg, #4a3d28, #2a231b);
+    border:1px solid #5c4d38;
+    position:relative;
+  }
+  .crate::before {
+    content:""; position:absolute; inset:6px;
+    border:1px solid #7a6850;
+  }
+  .crate.small { width:40px; height:35px; }
 
   .screen {
     position:fixed; inset:0; display:flex; flex-direction:column;
@@ -69,46 +83,45 @@
   .ico svg { width:100%; height:100%; display:block; }
 
   /* === Меню === */
-  #menu { align-items:center; justify-content:center; padding:28px; text-align:center; }
+  #menu { align-items:center; justify-content:center; padding:28px; text-align:center; position:relative; z-index:2; }
   .brand {
     font-size:12px; color:var(--text3); letter-spacing:8px; text-transform:uppercase;
-    margin-bottom:56px; font-weight:600;
+    margin-bottom:40px; font-weight:600;
   }
   .brand span { color:var(--accent); }
-  .balance-block { margin-bottom:56px; }
+  .balance-block { margin-bottom:40px; }
   .balance-label {
     font-size:10px; color:var(--text3); letter-spacing:4px; text-transform:uppercase;
-    margin-bottom:14px;
+    margin-bottom:10px;
   }
   .balance-value {
-    font-size:58px; font-weight:200; letter-spacing:-2px;
+    font-size:52px; font-weight:200; letter-spacing:-2px;
     color:var(--gold2); font-variant-numeric:tabular-nums;
     display:flex; align-items:center; justify-content:center; gap:10px;
-    text-shadow:0 0 40px rgba(196,154,58,0.3);
   }
-  .balance-value .ico { font-size:42px; color:var(--gold2); opacity:.9; }
+  .balance-value .ico { font-size:36px; color:var(--gold2); opacity:.9; }
 
   .modes { display:flex; flex-direction:column; gap:12px; width:100%; max-width:320px; }
   .mode-btn {
     border:1px solid var(--border2); background:linear-gradient(180deg, var(--bg3), var(--bg2));
-    border-radius:10px;
-    padding:22px 26px; color:var(--text); cursor:pointer;
+    border-radius:12px;
+    padding:20px 24px; color:var(--text); cursor:pointer;
     display:flex; justify-content:space-between; align-items:center;
-    transition:border-color .2s, background .2s, box-shadow .2s;
+    transition:border-color .2s, box-shadow .2s;
     font-family:inherit; font-size:15px; letter-spacing:1px;
     position:relative; overflow:hidden;
   }
   .mode-btn::before {
     content:""; position:absolute; left:0; top:0; bottom:0; width:3px;
     background:linear-gradient(180deg, var(--accent), var(--gold));
-    opacity:.5;
+    opacity:.6;
   }
-  .mode-btn:active { border-color:var(--accent); box-shadow:0 0 20px rgba(184,86,58,0.25); }
-  .mode-btn .label { font-weight:600; color:var(--sand2); position:relative; }
+  .mode-btn:active { border-color:var(--accent); box-shadow:0 0 16px rgba(212,107,74,0.2); }
+  .mode-btn .label { font-weight:600; color:var(--sand); position:relative; }
   .mode-btn .sub { color:var(--text3); font-size:11px; margin-top:4px; letter-spacing:0; position:relative; }
   .mode-btn .arrow { color:var(--text3); font-size:18px; position:relative; }
 
-  .menu-footer { margin-top:44px; display:flex; gap:10px; }
+  .menu-footer { margin-top:36px; display:flex; gap:10px; }
   .mini-btn {
     background:transparent; border:1px solid var(--border); color:var(--text3);
     font-size:12px; letter-spacing:1.5px; cursor:pointer;
@@ -119,16 +132,15 @@
 
   /* === Топбар === */
   .topbar {
-    padding:18px 22px; display:flex; justify-content:space-between; align-items:center;
-    border-bottom:1px solid var(--border);
+    padding:16px 20px; display:flex; justify-content:space-between; align-items:center;
+    border-bottom:1px solid var(--border); position:relative; z-index:2;
   }
   .close-btn {
     background:transparent; border:none; color:var(--text3);
     cursor:pointer; padding:8px; line-height:1;
     display:flex; align-items:center; justify-content:center;
-    transition:color .2s;
   }
-  .close-btn:active { color:var(--accent2); }
+  .close-btn:active { color:var(--accent); }
   .close-btn .ico { font-size:20px; }
   .topbar-balance {
     color:var(--gold2); font-size:15px; font-variant-numeric:tabular-nums;
@@ -138,29 +150,27 @@
 
   /* === Кейсы === */
   .cases-list {
-    flex:1; padding:20px 22px; display:flex; flex-direction:column;
-    gap:12px; overflow-y:auto;
+    flex:1; padding:16px 20px; display:flex; flex-direction:column;
+    gap:10px; overflow-y:auto; position:relative; z-index:2;
   }
   .case-item {
     border:1px solid var(--border2); background:linear-gradient(180deg, var(--bg3), var(--bg2));
     border-radius:10px;
-    padding:20px 22px; color:var(--text); cursor:pointer;
+    padding:18px 20px; color:var(--text); cursor:pointer;
     display:flex; justify-content:space-between; align-items:center;
-    transition:border-color .2s, box-shadow .2s; font-family:inherit; text-align:left;
+    transition:border-color .2s; font-family:inherit; text-align:left;
     position:relative; overflow:hidden;
   }
   .case-item::before {
     content:""; position:absolute; left:0; top:0; bottom:0; width:3px;
     background:linear-gradient(180deg, var(--sand), var(--accent));
-    opacity:0.6;
+    opacity:0.7;
   }
-  .case-item:active { border-color:var(--accent); box-shadow:0 0 20px rgba(184,86,58,0.2); }
-  .case-item .info .name { font-size:15px; letter-spacing:1px; font-weight:600; color:var(--sand2); }
+  .case-item:active { border-color:var(--accent); }
+  .case-item .info .name { font-size:15px; letter-spacing:1px; font-weight:600; color:var(--sand); }
   .case-item .info .range {
-    color:var(--text3); font-size:11px; margin-top:5px;
-    display:flex; align-items:center; gap:3px;
+    color:var(--text3); font-size:11px; margin-top:4px;
   }
-  .case-item .info .range .ico { font-size:10px; }
   .case-item .price {
     font-size:15px; color:var(--gold2); font-variant-numeric:tabular-nums;
     letter-spacing:1px; display:flex; align-items:center; gap:5px;
@@ -174,93 +184,89 @@
   .roulette-stage {
     flex:1; display:flex; flex-direction:column;
     align-items:center; justify-content:center;
-    position:relative; overflow:hidden;
+    position:relative; overflow:hidden; z-index:2;
   }
-  .roulette { position:relative; width:100%; height:140px; overflow:hidden; }
+  .roulette { position:relative; width:100%; height:120px; overflow:hidden; }
   .roulette::before, .roulette::after {
-    content:""; position:absolute; top:0; bottom:0; width:100px; z-index:4;
+    content:""; position:absolute; top:0; bottom:0; width:80px; z-index:4;
     pointer-events:none;
   }
-  .roulette::before { left:0; background:linear-gradient(to right, var(--bg) 10%, transparent); }
-  .roulette::after { right:0; background:linear-gradient(to left, var(--bg) 10%, transparent); }
+  .roulette::before { left:0; background:linear-gradient(to right, var(--bg) 20%, transparent); }
+  .roulette::after { right:0; background:linear-gradient(to left, var(--bg) 20%, transparent); }
 
   .track {
     position:absolute; top:0; left:0; height:100%;
     display:flex; align-items:center; will-change:transform;
   }
   .slot {
-    width:110px; height:120px; margin:0 5px; flex-shrink:0;
+    width:100px; height:110px; margin:0 4px; flex-shrink:0;
     border:1px solid var(--border); border-radius:8px;
-    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px;
-    font-size:10px; font-weight:400; color:var(--text3);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:4px;
+    font-size:9px; font-weight:400; color:var(--text3);
     background:linear-gradient(180deg, var(--bg3), var(--bg2));
-    transition:border-color .3s, color .3s, box-shadow .3s;
-    overflow:hidden; padding:8px;
+    transition:border-color .3s, color .3s;
+    overflow:hidden; padding:6px;
   }
   .slot .slot-img {
-    width:70px; height:45px; display:flex; align-items:center; justify-content:center;
+    width:60px; height:40px; display:flex; align-items:center; justify-content:center;
     color:var(--text3);
   }
   .slot .slot-img svg { width:100%; height:100%; }
   .slot .slot-name {
     font-size:8px; color:var(--text3); text-align:center;
     line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
-    max-width:100px;
+    max-width:90px;
   }
   .slot .slot-wear {
     font-size:7px; color:var(--text3); opacity:.6;
   }
-  /* Редкости CS2 */
-  .slot.common    { border-color:#4a3d28; color:#8a7754; }
+  /* Редкости */
+  .slot.common    { border-color:#6b5f48; color:#8a7754; }
   .slot.common .slot-img { color:#8a7754; }
-  .slot.uncommon  { border-color:var(--ct); color:var(--ct2); }
-  .slot.uncommon .slot-img { color:var(--ct2); }
-  .slot.rare      { border-color:#7a4a8a; color:#b070c0; }
+  .slot.uncommon  { border-color:var(--ct); color:#7a9ab8; }
+  .slot.uncommon .slot-img { color:#7a9ab8; }
+  .slot.rare      { border-color:#8a5a9a; color:#b070c0; }
   .slot.rare .slot-img { color:#b070c0; }
-  .slot.mythical  { border-color:var(--accent); color:var(--accent2); }
-  .slot.mythical .slot-img { color:var(--accent2); }
-  .slot.legendary { border-color:var(--gold); color:var(--gold2); box-shadow:0 0 14px rgba(196,154,58,0.3); }
+  .slot.mythical  { border-color:var(--accent); color:var(--accent); }
+  .slot.mythical .slot-img { color:var(--accent); }
+  .slot.legendary { border-color:var(--gold); color:var(--gold2); }
   .slot.legendary .slot-img { color:var(--gold2); }
-  .slot.ancient   { border-color:#c44a3a; color:#e85a3a; box-shadow:0 0 18px rgba(196,74,58,0.4); }
-  .slot.ancient .slot-img { color:#e85a3a; }
 
   .pointer {
     position:absolute; top:50%; left:50%;
     transform:translate(-50%,-50%);
-    width:2px; height:150px; background:var(--accent2); z-index:5;
+    width:2px; height:130px; background:var(--accent); z-index:5;
     border-radius:1px;
-    box-shadow:0 0 16px var(--accent2);
   }
 
   .spin-result {
-    text-align:center; margin-top:30px;
+    text-align:center; margin-top:24px;
     opacity:0; transition:opacity .3s;
   }
   .spin-result.show { opacity:1; }
   .spin-result .label {
-    font-size:10px; color:var(--text3); letter-spacing:4px; text-transform:uppercase;
-    margin-bottom:10px;
+    font-size:9px; color:var(--text3); letter-spacing:4px; text-transform:uppercase;
+    margin-bottom:8px;
   }
   .spin-result .val {
-    font-size:40px; font-weight:200; letter-spacing:-1px;
+    font-size:36px; font-weight:200; letter-spacing:-1px;
     color:var(--gold2); font-variant-numeric:tabular-nums;
     display:flex; align-items:center; justify-content:center; gap:8px;
   }
-  .spin-result .val .ico { font-size:24px; }
+  .spin-result .val .ico { font-size:22px; }
 
-  .spin-controls { padding:0 22px 30px; }
+  .spin-controls { padding:0 20px 24px; position:relative; z-index:2; }
 
   .main-btn {
     width:100%; background:linear-gradient(180deg, var(--bg3), var(--bg2)); border:1px solid var(--accent);
-    border-radius:10px; padding:20px; color:var(--sand2);
+    border-radius:10px; padding:18px; color:var(--sand);
     font-size:14px; font-weight:600; letter-spacing:3px;
-    cursor:pointer; transition:background .2s, border-color .2s, box-shadow .2s;
+    cursor:pointer; transition:background .2s, border-color .2s;
     font-family:inherit; text-transform:uppercase;
   }
   .main-btn:active:not(.disabled):not(:disabled) {
-    background:linear-gradient(180deg, #3a1a10, #2a1008);
-    border-color:var(--accent2);
-    box-shadow:0 0 20px rgba(184,86,58,0.3);
+    background:linear-gradient(180deg, #4a2a1a, #2a1a10);
+    border-color:var(--accent);
   }
   .main-btn:disabled,
   .main-btn.disabled {
@@ -268,7 +274,6 @@
     border-color:var(--border) !important;
     background:var(--bg2) !important;
     cursor:not-allowed !important;
-    letter-spacing:2px;
     pointer-events:none;
   }
   .main-btn.disabled:active,
@@ -280,139 +285,183 @@
   /* === Апгрейдер === */
   .upgrade-stage {
     flex:1; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; padding:22px;
-    gap:16px; overflow-y:auto;
+    align-items:center; justify-content:center; padding:20px;
+    gap:16px; position:relative; z-index:2;
   }
   .upgrade-side {
-    width:100%; max-width:340px;
-    border:1px solid var(--border2); border-radius:10px;
+    width:100%; max-width:320px;
+    border:1px solid var(--border2); border-radius:12px;
     background:linear-gradient(180deg, var(--bg3), var(--bg2));
-    padding:18px;
+    padding:16px;
+    cursor:pointer; transition:border-color .2s;
     position:relative;
   }
+  .upgrade-side:active { border-color:var(--accent); }
   .upgrade-side .label {
     font-size:9px; color:var(--text3); letter-spacing:3px; text-transform:uppercase;
-    margin-bottom:12px;
+    margin-bottom:10px;
   }
   .upgrade-side .skin-preview {
-    width:100%; height:90px; display:flex; align-items:center; justify-content:center;
-    color:var(--text3); margin-bottom:8px;
+    width:100%; height:70px; display:flex; align-items:center; justify-content:center;
+    color:var(--text3); margin-bottom:6px;
   }
-  .upgrade-side .skin-preview svg { width:110px; height:70px; }
+  .upgrade-side .skin-preview svg { width:100px; height:60px; }
   .upgrade-side .skin-name {
-    font-size:13px; color:var(--sand2); text-align:center; margin-bottom:3px;
+    font-size:13px; color:var(--sand); text-align:center; margin-bottom:2px;
   }
   .upgrade-side .skin-wear {
     font-size:10px; color:var(--text3); text-align:center;
   }
-  .upgrade-arrow {
-    font-size:22px; color:var(--accent2);
-    animation:upArrow 2s infinite;
+
+  /* Круглый прогресс-бар апгрейдера */
+  .upgrade-circle-wrap {
+    position:relative; width:200px; height:200px;
+    display:flex; align-items:center; justify-content:center;
+    margin:10px 0;
   }
-  @keyframes upArrow {
-    0%,100% { transform:translateY(0); opacity:.6; }
-    50%     { transform:translateY(-4px); opacity:1; }
+  .upgrade-circle {
+    width:180px; height:180px; border-radius:50%;
+    border:6px solid var(--border);
+    background:conic-gradient(var(--gold2) var(--p, 0%), var(--border) 0%);
+    display:flex; align-items:center; justify-content:center;
+    position:relative;
+    transition:background .3s;
   }
+  .upgrade-circle::before {
+    content:""; position:absolute; inset:8px; border-radius:50%;
+    background:var(--bg2); z-index:1;
+  }
+  .upgrade-percent {
+    position:relative; z-index:2;
+    font-size:42px; font-weight:200; color:var(--gold2);
+    font-variant-numeric:tabular-nums;
+  }
+  .upgrade-percent span { font-size:24px; }
+
+  /* Стрелка-указатель */
+  .upgrade-arrow-indicator {
+    position:absolute; top:-12px; left:50%;
+    transform:translateX(-50%) rotate(0deg);
+    transform-origin:50% 112px;
+    z-index:5;
+    transition:transform .1s linear;
+    filter:drop-shadow(0 0 6px var(--gold2));
+  }
+  .upgrade-arrow-indicator svg { width:20px; height:26px; }
+  
+  .upgrade-arrow-indicator.spinning {
+    animation:arrowSpin 3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+  }
+  @keyframes arrowSpin {
+    0%   { transform:translateX(-50%) rotate(0deg); }
+    70%  { transform:translateX(-50%) rotate(1080deg); }
+    100% { transform:translateX(-50%) rotate(1080deg); }
+  }
+
   .upgrade-chance {
     text-align:center; font-size:11px; color:var(--text3);
-    letter-spacing:2px; margin:8px 0;
+    letter-spacing:2px; margin:4px 0;
   }
-  .upgrade-chance span { color:var(--accent2); font-weight:600; }
+  .upgrade-chance span { color:var(--accent); font-weight:600; }
 
   /* === Профиль === */
-  .profile-content { flex:1; padding:0 22px; overflow-y:auto; }
+  .profile-content { flex:1; padding:0 20px; overflow-y:auto; position:relative; z-index:2; }
   .profile-card {
     border:1px solid var(--border2); background:linear-gradient(180deg, var(--bg3), var(--bg2));
-    border-radius:14px;
-    padding:24px; margin-bottom:16px;
-    display:flex; align-items:center; gap:16px;
+    border-radius:12px;
+    padding:20px; margin-bottom:14px;
+    display:flex; align-items:center; gap:14px;
   }
   .profile-avatar {
-    width:60px; height:60px; border-radius:50%;
+    width:56px; height:56px; border-radius:50%;
     border:1px solid var(--border2); flex-shrink:0;
     display:flex; align-items:center; justify-content:center;
-    color:var(--sand2); background:var(--bg);
+    color:var(--sand); background:var(--bg);
     overflow:hidden;
   }
   .profile-avatar img { width:100%; height:100%; object-fit:cover; }
-  .profile-avatar .ico { font-size:28px; }
-  .profile-info .name { font-size:17px; font-weight:500; color:var(--sand2); }
-  .profile-info .username { color:var(--text3); font-size:13px; margin-top:4px; }
+  .profile-avatar .ico { font-size:26px; }
+  .profile-info .name { font-size:16px; font-weight:500; color:var(--sand); }
+  .profile-info .username { color:var(--text3); font-size:12px; margin-top:3px; }
 
   .stats-grid {
-    display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:16px;
+    display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;
   }
   .stat-card {
     border:1px solid var(--border); background:linear-gradient(180deg, var(--bg3), var(--bg2));
-    border-radius:10px; padding:18px 14px; text-align:center;
+    border-radius:10px; padding:16px 12px; text-align:center;
   }
   .stat-card .stat-label {
-    font-size:9px; color:var(--text3); letter-spacing:3px; text-transform:uppercase;
-    margin-bottom:8px;
+    font-size:9px; color:var(--text3); letter-spacing:2px; text-transform:uppercase;
+    margin-bottom:6px;
   }
   .stat-card .stat-value {
-    font-size:20px; font-weight:300; color:var(--sand2);
+    font-size:18px; font-weight:300; color:var(--sand);
     font-variant-numeric:tabular-nums;
-    display:flex; align-items:center; justify-content:center; gap:4px;
   }
-  .stat-card .stat-value .ico { font-size:14px; }
 
   .section-title {
     font-size:9px; color:var(--text3); letter-spacing:4px; text-transform:uppercase;
-    margin:20px 0 10px;
+    margin:18px 0 8px;
   }
 
   .promo-row { display:flex; gap:8px; }
   .promo-input {
     flex:1; min-width:0; background:var(--bg); border:1px solid var(--border);
-    border-radius:10px; padding:16px; color:var(--sand2);
-    font-size:14px; outline:none; font-family:inherit;
-    letter-spacing:1px;
+    border-radius:8px; padding:14px; color:var(--sand);
+    font-size:13px; outline:none; font-family:inherit;
   }
   .promo-input::placeholder { color:var(--text3); }
   .promo-input:focus { border-color:var(--accent); }
   .promo-btn {
     background:linear-gradient(180deg, var(--bg3), var(--bg2)); border:1px solid var(--accent);
-    border-radius:10px; padding:0 22px; color:var(--sand2);
-    font-size:13px; cursor:pointer; font-family:inherit;
-    letter-spacing:1.5px; transition:all .2s;
-    flex-shrink:0;
+    border-radius:8px; padding:0 20px; color:var(--sand);
+    font-size:12px; cursor:pointer; font-family:inherit;
+    transition:all .2s; flex-shrink:0;
   }
-  .promo-btn:active { background:#3a1a10; border-color:var(--accent2); }
+  .promo-btn:active { background:#4a2a1a; }
 
   .pay-row { display:flex; gap:10px; margin-bottom:10px; }
   .pay-btn {
     flex:1; min-width:0; background:linear-gradient(180deg, var(--bg3), var(--bg2)); border:1px solid var(--border);
-    border-radius:14px; padding:18px 14px; color:var(--sand2);
-    cursor:pointer; font-family:inherit; font-size:13px;
-    letter-spacing:1px; transition:all .2s;
-    display:flex; flex-direction:column; align-items:center; gap:8px;
+    border-radius:10px; padding:16px 12px; color:var(--sand);
+    cursor:pointer; font-family:inherit; font-size:12px;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
   }
   .pay-btn:active { border-color:var(--accent); }
-  .pay-btn .pay-icon { display:flex; align-items:center; justify-content:center; color:var(--gold2); }
-  .pay-btn .pay-icon .ico { font-size:26px; }
+  .pay-btn .pay-icon { color:var(--gold2); }
+  .pay-btn .pay-icon .ico { font-size:24px; }
   .pay-btn .pay-label { font-weight:400; }
-  .pay-btn .pay-sub { font-size:10px; color:var(--text3); }
+  .pay-btn .pay-sub { font-size:9px; color:var(--text3); }
 
   #toast {
-    position:fixed; top:60px; left:50%;
-    transform:translateX(-50%) translateY(-40px);
-    background:var(--bg2); color:var(--sand2);
-    padding:14px 24px; border-radius:100px;
-    font-size:14px; z-index:100;
+    position:fixed; top:50px; left:50%;
+    transform:translateX(-50%) translateY(-30px);
+    background:var(--bg2); color:var(--sand);
+    padding:12px 20px; border-radius:100px;
+    font-size:13px; z-index:100;
     border:1px solid var(--accent);
-    transition:transform .35s cubic-bezier(.34,1.56,.64,1), opacity .35s;
+    transition:transform .3s, opacity .3s;
     pointer-events:none; white-space:nowrap; opacity:0;
-    letter-spacing:.5px;
-    display:flex; align-items:center; gap:6px;
   }
-  #toast .ico { font-size:13px; }
   #toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+
+  /* Иконки оружия (абстрактные) */
+  .weapon-svg { width:100%; height:100%; }
 </style>
 </head>
 <body>
 
 <div id="bg"></div>
+
+<!-- Деревянные ящики (декор) -->
+<div class="decor-crates">
+  <div class="crate"></div>
+  <div class="crate small"></div>
+  <div class="crate"></div>
+  <div class="crate small"></div>
+  <div class="crate"></div>
+</div>
 
 <!-- === ГЛАВНОЕ МЕНЮ === -->
 <div class="screen" id="menu">
@@ -421,7 +470,7 @@
   <div class="balance-block">
     <div class="balance-label">Баланс</div>
     <div class="balance-value" id="menuBalance">
-      <span class="ico" data-icon="coin"></span>
+      <span class="ico" data-icon="ruble"></span>
       <span class="num">0</span>
     </div>
   </div>
@@ -455,7 +504,7 @@
       <span class="ico" data-icon="close"></span>
     </button>
     <div class="topbar-balance">
-      <span class="ico" data-icon="coin"></span>
+      <span class="ico" data-icon="ruble"></span>
       <span id="casesBalance">0</span>
     </div>
   </div>
@@ -475,10 +524,10 @@
     <button class="case-item" onclick="openCaseScreen('case10')">
       <div class="info">
         <div class="name">Пыльный контейнер</div>
-        <div class="range">Песочные скины · от 1 ★</div>
+        <div class="range">Песочные скины · от 1 ₽</div>
       </div>
       <div class="price">
-        <span class="ico" data-icon="coin"></span>
+        <span class="ico" data-icon="ruble"></span>
         10
       </div>
     </button>
@@ -486,10 +535,10 @@
     <button class="case-item" onclick="openCaseScreen('case50')">
       <div class="info">
         <div class="name">Выжженный контейнер</div>
-        <div class="range">Пустынные скины · от 5 ★</div>
+        <div class="range">Пустынные скины · от 5 ₽</div>
       </div>
       <div class="price">
-        <span class="ico" data-icon="coin"></span>
+        <span class="ico" data-icon="ruble"></span>
         50
       </div>
     </button>
@@ -497,10 +546,10 @@
     <button class="case-item" onclick="openCaseScreen('case100')">
       <div class="info">
         <div class="name">Золотой контейнер</div>
-        <div class="range">Covert скины · от 10 ★</div>
+        <div class="range">Covert скины · от 10 ₽</div>
       </div>
       <div class="price">
-        <span class="ico" data-icon="coin"></span>
+        <span class="ico" data-icon="ruble"></span>
         100
       </div>
     </button>
@@ -514,7 +563,7 @@
       <span class="ico" data-icon="close"></span>
     </button>
     <div class="topbar-balance">
-      <span class="ico" data-icon="coin"></span>
+      <span class="ico" data-icon="ruble"></span>
       <span id="openBalance">0</span>
     </div>
   </div>
@@ -543,33 +592,42 @@
       <span class="ico" data-icon="close"></span>
     </button>
     <div class="topbar-balance">
-      <span class="ico" data-icon="coin"></span>
+      <span class="ico" data-icon="ruble"></span>
       <span id="upgradeBalance">0</span>
     </div>
   </div>
 
   <div class="upgrade-stage">
-    <div class="upgrade-side" id="upgradeFrom">
+    <div class="upgrade-side" id="upgradeFrom" onclick="pickFromSkin()">
       <div class="label">Твой скин</div>
       <div class="skin-preview" id="upFromPreview"></div>
       <div class="skin-name" id="upFromName">Нажми, чтобы выбрать</div>
       <div class="skin-wear" id="upFromWear">—</div>
     </div>
 
-    <div class="upgrade-arrow">↓</div>
-
-    <div class="upgrade-side" id="upgradeTo">
+    <div class="upgrade-side" id="upgradeTo" onclick="pickToSkin()">
       <div class="label">Целевой скин</div>
       <div class="skin-preview" id="upToPreview"></div>
       <div class="skin-name" id="upToName">Нажми, чтобы выбрать</div>
       <div class="skin-wear" id="upToWear">—</div>
     </div>
 
+    <div class="upgrade-circle-wrap">
+      <div class="upgrade-arrow-indicator" id="upgradeArrow">
+        <svg viewBox="0 0 20 26" fill="none">
+          <path d="M10 26 L10 2 M2 10 L10 2 L18 10" stroke="var(--gold2)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="upgrade-circle" id="upgradeCircle" style="--p: 0%;">
+        <div class="upgrade-percent" id="upgradePercent">?%</div>
+      </div>
+    </div>
+
     <div class="upgrade-chance">
       Шанс успеха: <span id="upChance">0%</span>
     </div>
 
-    <button class="main-btn" onclick="doUpgrade()">Апгрейд</button>
+    <button class="main-btn" id="upgradeBtn" onclick="doUpgrade()">Прокачать</button>
   </div>
 </div>
 
@@ -580,7 +638,7 @@
       <span class="ico" data-icon="close"></span>
     </button>
     <div class="topbar-balance">
-      <span class="ico" data-icon="coin"></span>
+      <span class="ico" data-icon="ruble"></span>
       <span id="profileBalance">0</span>
     </div>
   </div>
@@ -615,12 +673,12 @@
     <div class="section-title">Действия</div>
     <div class="pay-row">
       <button class="pay-btn" onclick="withdrawOpen()">
-        <span class="pay-icon"><span class="ico" data-icon="coin"></span></span>
+        <span class="pay-icon"><span class="ico" data-icon="ruble"></span></span>
         <span class="pay-label">Вывод</span>
-        <span class="pay-sub">от 100 ★</span>
+        <span class="pay-sub">от 100 ₽</span>
       </button>
       <button class="pay-btn" onclick="openTopupSheet()">
-        <span class="pay-icon"><span class="ico" data-icon="coin"></span></span>
+        <span class="pay-icon"><span class="ico" data-icon="ruble"></span></span>
         <span class="pay-label">Пополнить</span>
         <span class="pay-sub">Telegram Stars</span>
       </button>
@@ -637,10 +695,11 @@ if (tg) { tg.ready(); tg.expand(); }
 
 /* ==================== SVG ИКОНКИ ==================== */
 const ICONS = {
-  coin: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+  ruble: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
          stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="12" r="9"/>
-    <path d="M9 12h6M12 9v6"/>
+    <path d="M6 21V4h5a5 5 0 0 1 0 10H6"/>
+    <path d="M6 14h8"/>
+    <path d="M6 18h6"/>
   </svg>`,
   gift: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
          stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
@@ -658,21 +717,21 @@ const ICONS = {
     <path d="M6 6 L18 18M18 6 L6 18"/>
   </svg>`,
   // Абстрактные иконки оружия
-  rifle: `<svg viewBox="0 0 100 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M10 20 L60 20 M60 20 L60 12 M60 20 L60 28 M60 12 L80 12 M60 28 L80 28 M80 12 L80 28 M80 12 L88 12 M80 28 L88 28 M88 12 L88 28 M88 12 L95 16 M88 28 L95 24"/>
-    <rect x="30" y="16" width="8" height="8" fill="currentColor" opacity="0.3"/>
+  rifle: `<svg viewBox="0 0 100 40" class="weapon-svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 20 L55 20 M55 20 L55 14 M55 20 L55 26 M55 14 L75 14 M55 26 L75 26 M75 14 L75 26 M75 14 L85 14 M75 26 L85 26 M85 14 L85 26 M85 14 L90 18 M85 26 L90 22"/>
+    <rect x="35" y="16" width="6" height="8" fill="currentColor" opacity="0.2"/>
   </svg>`,
-  pistol: `<svg viewBox="0 0 100 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M15 20 L55 20 M55 20 L55 12 M55 20 L55 28 M55 12 L70 12 M55 28 L70 28 M70 12 L70 28 M70 12 L80 12 M70 28 L80 28 M80 12 L80 28 M80 12 L85 16 M85 16 L85 24"/>
-    <rect x="30" y="16" width="8" height="8" fill="currentColor" opacity="0.3"/>
+  pistol: `<svg viewBox="0 0 100 40" class="weapon-svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M25 20 L60 20 M60 20 L60 14 M60 20 L60 26 M60 14 L72 14 M60 26 L72 26 M72 14 L72 26 M72 14 L80 14 M72 26 L80 26 M80 14 L80 26 M80 14 L84 18 M84 18 L84 22"/>
+    <rect x="38" y="16" width="6" height="8" fill="currentColor" opacity="0.2"/>
   </svg>`,
-  sniper: `<svg viewBox="0 0 100 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M5 20 L65 20 M65 20 L65 12 M65 20 L65 28 M65 12 L85 12 M65 28 L85 28 M85 12 L85 28 M85 12 L95 16 M95 16 L95 24 M30 12 L30 8 M30 8 L40 8 M40 8 L40 12"/>
-    <rect x="35" y="16" width="10" height="8" fill="currentColor" opacity="0.3"/>
+  sniper: `<svg viewBox="0 0 100 40" class="weapon-svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M10 20 L65 20 M65 20 L65 14 M65 20 L65 26 M65 14 L85 14 M65 26 L85 26 M85 14 L85 26 M85 14 L92 18 M92 18 L92 22 M38 14 L38 8 L48 8 L48 14"/>
+    <rect x="45" y="16" width="10" height="8" fill="currentColor" opacity="0.2"/>
   </svg>`,
-  knife: `<svg viewBox="0 0 100 40" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M20 20 L70 20 M70 20 L75 15 M70 20 L75 25 M15 20 L20 20 M15 15 L15 25 M70 12 L80 12 M70 28 L80 28"/>
-    <path d="M15 20 L70 20" stroke-width="3"/>
+  knife: `<svg viewBox="0 0 100 40" class="weapon-svg" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M25 20 L70 20 M70 20 L76 14 M70 20 L76 26 M20 20 L25 20 M20 14 L20 26 M70 12 L80 12 M70 28 L80 28"/>
+    <path d="M25 20 L70 20" stroke-width="3"/>
   </svg>`,
 };
 
@@ -685,17 +744,23 @@ function renderIcons(root = document) {
 
 /* ==================== СОСТОЯНИЕ ==================== */
 const state = {
-  balance: 0,
+  balance: 1000,
   skinsValue: 0,
   currentCase: null,
+  isSpinning: false,
+  upgrade: {
+    fromSkin: null,
+    toSkin: null,
+    chance: 0,
+  },
 };
 
 const $ = id => document.getElementById(id);
 
-/* ==================== ФОН — песчинки ==================== */
+/* ==================== ФОН ==================== */
 (function makeSand(){
   const box = $('bg');
-  for (let i = 0; i < 30; i++) {
+  for (let i = 0; i < 25; i++) {
     const d = document.createElement('div');
     d.className = 'sand-dot';
     d.style.left = Math.random() * 100 + '%';
@@ -707,10 +772,10 @@ const $ = id => document.getElementById(id);
 
 /* ==================== UI ==================== */
 function fmt(n) { return Math.floor(n).toLocaleString('ru-RU'); }
+function rubIco() { return `<span class="ico" data-icon="ruble">${ICONS.ruble}</span>`; }
 
 function updateBalance() {
-  const h = `<span class="ico" data-icon="coin"></span><span class="num">${fmt(state.balance)}</span>`;
-  $('menuBalance').innerHTML = h;
+  $('menuBalance').innerHTML = `${rubIco()}<span class="num">${fmt(state.balance)}</span>`;
   $('casesBalance').textContent = fmt(state.balance);
   $('openBalance').textContent = fmt(state.balance);
   $('upgradeBalance').textContent = fmt(state.balance);
@@ -738,14 +803,8 @@ function openMode(mode) {
   else if (mode === 'upgrade') showScreen('upgrade');
   updateBalance();
 }
-function backToMenu() {
-  showScreen('menu');
-  updateBalance();
-}
-function closeCase() {
-  showScreen('cases');
-  updateBalance();
-}
+function backToMenu() { showScreen('menu'); updateBalance(); }
+function closeCase() { showScreen('cases'); updateBalance(); }
 function openProfile() {
   const user = tg?.initDataUnsafe?.user;
   const av = $('avatar');
@@ -760,33 +819,28 @@ function openProfile() {
   showScreen('profile');
 }
 
-/* ==================== ДЕМО-СКИНЫ (заглушки) ==================== */
-// В будущем здесь будут данные с сервера.
-// Пока — демо-скины с абстрактными иконками оружия.
+/* ==================== ДЕМО-СКИНЫ ==================== */
 const DEMO_SKINS = [
-  { id: 1,  name: 'AK-47 | Пустынный шторм',    weapon: 'rifle',  rarity: 'common',    wear: 'FT' },
-  { id: 2,  name: 'M4A4 | Песчаная буря',       weapon: 'rifle',  rarity: 'uncommon',  wear: 'MW' },
-  { id: 3,  name: 'AWP | Выжженная земля',      weapon: 'sniper', rarity: 'rare',      wear: 'FT' },
-  { id: 4,  name: 'Desert Eagle | Пыль',        weapon: 'pistol', rarity: 'mythical',  wear: 'FN' },
-  { id: 5,  name: 'Karambit | Золото пустыни',  weapon: 'knife',  rarity: 'legendary', wear: 'FN' },
-  { id: 6,  name: 'USP-S | Обгоревший',         weapon: 'pistol', rarity: 'uncommon',  wear: 'BS' },
-  { id: 7,  name: 'SSG 08 | Песчаный вихрь',    weapon: 'sniper', rarity: 'common',    wear: 'WW' },
-  { id: 8,  name: 'M4A1-S | Закат',             weapon: 'rifle',  rarity: 'rare',      wear: 'FT' },
-  { id: 9,  name: 'Butterfly | Пустынный клинок', weapon: 'knife', rarity: 'ancient',   wear: 'FN' },
-  { id: 10, name: 'Glock-18 | Сухой ветер',     weapon: 'pistol', rarity: 'common',    wear: 'FT' },
+  { id: 1,  name: 'AK-47 | Пустынный шторм',    weapon: 'rifle',  rarity: 'common',    wear: 'FT', price: 120 },
+  { id: 2,  name: 'M4A4 | Песчаная буря',       weapon: 'rifle',  rarity: 'uncommon',  wear: 'MW', price: 340 },
+  { id: 3,  name: 'AWP | Выжженная земля',      weapon: 'sniper', rarity: 'rare',      wear: 'FT', price: 890 },
+  { id: 4,  name: 'Desert Eagle | Пыль',        weapon: 'pistol', rarity: 'mythical',  wear: 'FN', price: 1450 },
+  { id: 5,  name: 'Karambit | Золото пустыни',  weapon: 'knife',  rarity: 'legendary', wear: 'FN', price: 4200 },
+  { id: 6,  name: 'USP-S | Обгоревший',         weapon: 'pistol', rarity: 'uncommon',  wear: 'BS', price: 220 },
+  { id: 7,  name: 'SSG 08 | Песчаный вихрь',    weapon: 'sniper', rarity: 'common',    wear: 'WW', price: 80 },
+  { id: 8,  name: 'M4A1-S | Закат',             weapon: 'rifle',  rarity: 'rare',      wear: 'FT', price: 720 },
+  { id: 9,  name: 'Butterfly | Пустынный клинок', weapon: 'knife', rarity: 'legendary', wear: 'FN', price: 5100 },
+  { id: 10, name: 'Glock-18 | Сухой ветер',     weapon: 'pistol', rarity: 'common',    wear: 'FT', price: 60 },
 ];
 
-// Редкости → веса (чем выше, тем реже)
 const RARITY_WEIGHTS = {
   common:    50,
   uncommon:  25,
   rare:      15,
   mythical:  7,
   legendary: 2.5,
-  ancient:   0.5,
 };
 
-// Случайный скин по весам
 function pickRandomSkin() {
   let total = 0;
   for (const k in RARITY_WEIGHTS) total += RARITY_WEIGHTS[k];
@@ -801,19 +855,25 @@ function pickRandomSkin() {
   return DEMO_SKINS[0];
 }
 
-/* ==================== КЕЙСЫ (заглушка) ==================== */
+/* ==================== КЕЙСЫ (рулетка) ==================== */
 function openCaseScreen(caseKey) {
   state.currentCase = caseKey;
   showScreen('caseOpen');
   updateBalance();
-  $('spinBtn').textContent = 'Купить за 10 ★';
-  startIdleSpin();
+  $('spinBtn').textContent = 'Открыть';
+  $('spinBtn').disabled = false;
+  $('spinResult').className = 'spin-result';
+  
+  // Заполняем трек для демонстрации
+  fillTrack();
 }
 
-function startIdleSpin() {
+function fillTrack() {
   const track = $('track');
   track.innerHTML = '';
-  for (let i = 0; i < 20; i++) {
+  track.style.transition = 'none';
+  track.style.transform = 'translateX(0)';
+  for (let i = 0; i < 60; i++) {
     const skin = DEMO_SKINS[Math.floor(Math.random() * DEMO_SKINS.length)];
     track.appendChild(makeSlot(skin));
   }
@@ -831,16 +891,127 @@ function makeSlot(skin) {
 }
 
 function mainCaseAction() {
-  // Демо: показываем один случайный скин
-  const win = pickRandomSkin();
-  $('spinValue').innerHTML = `<span class="ico" data-icon="gift"></span>`;
-  $('spinResult').className = 'spin-result show';
-  toastText('Выпал: ' + win.name);
+  if (state.isSpinning) return;
+  state.isSpinning = true;
+  
+  const btn = $('spinBtn');
+  btn.disabled = true;
+  btn.classList.add('disabled');
+  btn.textContent = 'Крутим...';
+  $('spinResult').className = 'spin-result';
+  
+  const track = $('track');
+  const winSkin = pickRandomSkin();
+  
+  // Перестраиваем трек с выигрышем в центре (индекс 50)
+  track.innerHTML = '';
+  const STOP_INDEX = 50;
+  for (let i = 0; i < 60; i++) {
+    let skin;
+    if (i === STOP_INDEX) skin = winSkin;
+    else skin = DEMO_SKINS[Math.floor(Math.random() * DEMO_SKINS.length)];
+    track.appendChild(makeSlot(skin));
+  }
+  
+  void track.offsetWidth;
+  
+  const wrap = track.parentElement;
+  const wrapW = wrap.clientWidth;
+  const targetSlot = track.children[STOP_INDEX];
+  const trackRect = track.getBoundingClientRect();
+  const slotRect = targetSlot.getBoundingClientRect();
+  const slotCenter = (slotRect.left - trackRect.left) + slotRect.width / 2;
+  const targetX = wrapW / 2 - slotCenter;
+  
+  track.style.transition = 'none';
+  track.style.transform = 'translateX(0)';
+  void track.offsetWidth;
+  
+  const duration = 4500;
+  track.style.transition = `transform ${duration}ms cubic-bezier(0.12, 0.85, 0.18, 1)`;
+  track.style.transform = `translateX(${targetX}px)`;
+  
+  setTimeout(() => {
+    state.isSpinning = false;
+    btn.disabled = false;
+    btn.classList.remove('disabled');
+    btn.textContent = 'Ещё раз';
+    
+    $('spinValue').innerHTML = `${rubIco()} ${winSkin.price}`;
+    $('spinResult').className = 'spin-result show';
+    toastText('Выпал: ' + winSkin.name);
+  }, duration + 100);
 }
 
-/* ==================== АПГРЕЙДЕР (заглушка) ==================== */
+/* ==================== АПГРЕЙДЕР (рабочий демо) ==================== */
+function pickFromSkin() {
+  const skin = DEMO_SKINS[Math.floor(Math.random() * DEMO_SKINS.length)];
+  state.upgrade.fromSkin = skin;
+  $('upFromPreview').innerHTML = ICONS[skin.weapon];
+  $('upFromName').textContent = skin.name;
+  $('upFromWear').textContent = skin.wear;
+  updateUpgradeChance();
+}
+
+function pickToSkin() {
+  const skin = DEMO_SKINS[Math.floor(Math.random() * DEMO_SKINS.length)];
+  state.upgrade.toSkin = skin;
+  $('upToPreview').innerHTML = ICONS[skin.weapon];
+  $('upToName').textContent = skin.name;
+  $('upToWear').textContent = skin.wear;
+  updateUpgradeChance();
+}
+
+function updateUpgradeChance() {
+  const from = state.upgrade.fromSkin;
+  const to = state.upgrade.toSkin;
+  if (!from || !to) {
+    state.upgrade.chance = 0;
+    $('upChance').textContent = '0%';
+    $('upgradePercent').textContent = '?%';
+    $('upgradeCircle').style.setProperty('--p', '0%');
+    return;
+  }
+  // Шанс = цена_цели / цена_источника, ограничен 90%
+  let chance = (from.price / to.price) * 100;
+  chance = Math.min(chance, 90);
+  chance = Math.max(chance, 1);
+  state.upgrade.chance = Math.round(chance);
+  $('upChance').textContent = state.upgrade.chance + '%';
+  $('upgradePercent').innerHTML = state.upgrade.chance + '<span>%</span>';
+  $('upgradeCircle').style.setProperty('--p', state.upgrade.chance + '%');
+}
+
 function doUpgrade() {
-  toastText('Апгрейд: система скоро будет подключена');
+  if (!state.upgrade.fromSkin || !state.upgrade.toSkin) {
+    toastText('Выбери оба скина');
+    return;
+  }
+  if (state.isSpinning) return;
+  state.isSpinning = true;
+  
+  const btn = $('upgradeBtn');
+  btn.disabled = true;
+  btn.classList.add('disabled');
+  btn.textContent = 'Крутим...';
+  
+  const arrow = $('upgradeArrow');
+  arrow.classList.add('spinning');
+  
+  setTimeout(() => {
+    state.isSpinning = false;
+    arrow.classList.remove('spinning');
+    btn.disabled = false;
+    btn.classList.remove('disabled');
+    btn.textContent = 'Прокачать';
+    
+    const success = Math.random() * 100 < state.upgrade.chance;
+    if (success) {
+      toastText('Успех! Получен: ' + state.upgrade.toSkin.name);
+    } else {
+      toastText('Провал...');
+    }
+  }, 3200);
 }
 
 /* ==================== ПРОЧЕЕ ==================== */
