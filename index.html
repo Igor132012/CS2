@@ -60,10 +60,7 @@
     border:1px solid #5c4d38;
     position:relative;
   }
-  .crate::before {
-    content:""; position:absolute; inset:5px;
-    border:1px solid #7a6850;
-  }
+  .crate::before { content:""; position:absolute; inset:5px; border:1px solid #7a6850; }
   .crate.small { width:36px; height:32px; }
 
   .screen {
@@ -77,8 +74,8 @@
     flex-shrink:0; line-height:1;
   }
   .ico svg { width:100%; height:100%; display:block; }
+  .ico img { width:100%; height:100%; object-fit:contain; display:block; }
 
-  /* Меню */
   #menu { align-items:center; justify-content:center; padding:28px; text-align:center; position:relative; z-index:2; }
   .brand {
     font-size:12px; color:var(--text3); letter-spacing:8px; text-transform:uppercase;
@@ -142,7 +139,6 @@
   }
   .topbar-balance .ico { font-size:14px; color:var(--gold2); }
 
-  /* Кейсы */
   .cases-list {
     flex:1; padding:16px 20px; display:flex; flex-direction:column;
     gap:10px; overflow-y:auto; position:relative; z-index:2;
@@ -196,9 +192,11 @@
     overflow:hidden; padding:6px;
   }
   .slot .slot-img {
-    width:70px; height:45px; display:flex; align-items:center; justify-content:center;
+    width:80px; height:50px; display:flex; align-items:center; justify-content:center;
+    color:var(--text3);
   }
-  .slot .slot-img svg { width:100%; height:100%; }
+  .slot .slot-img svg,
+  .slot .slot-img img { width:100%; height:100%; object-fit:contain; }
   .slot .slot-name {
     font-size:8px; text-align:center;
     line-height:1.1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
@@ -259,7 +257,7 @@
     pointer-events:none;
   }
 
-  /* === АПГРЕЙДЕР (компактный, всё влезает) === */
+  /* Апгрейдер */
   .upgrade-stage {
     flex:1; display:flex; flex-direction:column;
     padding:12px 20px 16px;
@@ -267,9 +265,7 @@
     overflow:hidden;
   }
 
-  .upgrade-pair {
-    display:flex; flex-direction:column; gap:8px;
-  }
+  .upgrade-pair { display:flex; flex-direction:column; gap:8px; }
 
   .upgrade-side {
     border:1px solid var(--border2); border-radius:10px;
@@ -282,15 +278,14 @@
   .upgrade-side:active { border-color:var(--accent); }
 
   .upgrade-side .thumb {
-    width:70px; height:44px; flex-shrink:0;
+    width:80px; height:50px; flex-shrink:0;
     display:flex; align-items:center; justify-content:center;
     color:var(--text3);
   }
-  .upgrade-side .thumb svg { width:100%; height:100%; }
+  .upgrade-side .thumb svg,
+  .upgrade-side .thumb img { width:100%; height:100%; object-fit:contain; }
 
-  .upgrade-side .info {
-    flex:1; min-width:0;
-  }
+  .upgrade-side .info { flex:1; min-width:0; }
   .upgrade-side .info .label {
     font-size:9px; color:var(--text3); letter-spacing:2px; text-transform:uppercase;
     margin-bottom:3px;
@@ -299,16 +294,12 @@
     font-size:13px; color:var(--sand);
     white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
   }
-  .upgrade-side .info .wear {
-    font-size:10px; color:var(--text3); margin-top:2px;
-  }
-
+  .upgrade-side .info .wear { font-size:10px; color:var(--text3); margin-top:2px; }
   .upgrade-side .price {
     font-size:13px; color:var(--gold2); font-variant-numeric:tabular-nums;
     flex-shrink:0;
   }
 
-  /* Круглый прогресс */
   .upgrade-circle-wrap {
     position:relative; width:150px; height:150px;
     display:flex; align-items:center; justify-content:center;
@@ -339,15 +330,9 @@
     transform-origin:50% 83px;
     z-index:5;
     filter:drop-shadow(0 0 6px var(--gold2));
+    transition:transform 2.8s cubic-bezier(0.15, 0.7, 0.15, 1);
   }
   .upgrade-arrow-indicator svg { width:16px; height:22px; }
-  .upgrade-arrow-indicator.spinning {
-    animation:arrowSpin 3s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
-  }
-  @keyframes arrowSpin {
-    0%   { transform:translateX(-50%) rotate(0deg); }
-    100% { transform:translateX(-50%) rotate(1080deg); }
-  }
 
   .upgrade-chance {
     text-align:center; font-size:11px; color:var(--text3);
@@ -355,11 +340,7 @@
   }
   .upgrade-chance span { color:var(--accent); font-weight:600; }
 
-  /* Кнопка апгрейда — фиксирована внизу */
-  .upgrade-controls {
-    margin-top:auto;
-    padding-top:8px;
-  }
+  .upgrade-controls { margin-top:auto; padding-top:8px; }
 
   /* Профиль */
   .profile-content { flex:1; padding:0 20px; overflow-y:auto; position:relative; z-index:2; }
@@ -694,6 +675,26 @@
 const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
+/* ============================================================
+   ⚠️ СЮДА ВСТАВЬ СВОЮ КАРТИНКУ AK
+   ————————————————————————————————————————————————————————
+   Как получить base64-строку:
+   1. Открой в Termux: base64 -w 0 ak.png (где ak.png — твой файл)
+   2. Скопируй вывод — он начинается с "iVBORw0KGgo..." (без data:...)
+   3. Вставь в AK_BASE64 ниже между кавычками
+   ============================================================ */
+const AK_BASE64 = "";  // ← сюда вставь строку base64 без префикса "data:image/png;base64,"
+
+function akImg() {
+  if (AK_BASE64) {
+    return `<img src="data:image/png;base64,${AK_BASE64}" alt="">`;
+  }
+  // Заглушка — пока картинки нет, показываем простую SVG
+  return `<svg viewBox="0 0 200 80" fill="none">
+    <text x="100" y="45" text-anchor="middle" fill="#8a7754" font-size="10" font-family="sans-serif">вставь ak.png в AK_BASE64</text>
+  </svg>`;
+}
+
 /* ==================== SVG: ИКОНКИ ==================== */
 const ICONS = {
   ruble: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
@@ -716,115 +717,13 @@ const ICONS = {
          stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
     <path d="M6 6 L18 18M18 6 L6 18"/>
   </svg>`,
-
-  // === РЕАЛИСТИЧНЫЕ СИЛУЭТЫ ОРУЖИЯ (стиль как на картинке с золотым AK) ===
-
-  // AK-47 — точный силуэт с прикладом, магазином и стволом
-  rifle_ak: `<svg viewBox="0 0 200 80" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
-    <!-- Приклад -->
-    <path d="M10 50 L30 40 L50 40 L55 45 L60 45 L60 55 L50 60 L30 60 L15 55 Z" fill="currentColor" opacity="0.25"/>
-    <path d="M10 50 L30 40 L50 40 L55 45 L60 45 L60 55 L50 60 L30 60 L15 55 Z"/>
-    <!-- Корпус -->
-    <path d="M60 45 L70 38 L130 38 L135 42 L150 42 L150 52 L135 52 L130 56 L70 56 Z" fill="currentColor" opacity="0.15"/>
-    <path d="M60 45 L70 38 L130 38 L135 42 L150 42 L150 52 L135 52 L130 56 L70 56 Z"/>
-    <!-- Крышка ствольной коробки -->
-    <path d="M70 38 L75 32 L120 32 L125 38"/>
-    <!-- Магазин -->
-    <path d="M75 56 Q80 70 90 72 L100 72 Q105 68 105 56 Z" fill="currentColor" opacity="0.3"/>
-    <path d="M75 56 Q80 70 90 72 L100 72 Q105 68 105 56 Z"/>
-    <!-- Рукоятка -->
-    <path d="M68 56 L62 72 L72 72 L76 56 Z" fill="currentColor" opacity="0.3"/>
-    <path d="M68 56 L62 72 L72 72 L76 56 Z"/>
-    <!-- Спусковая скоба -->
-    <path d="M78 56 Q78 62 84 62 L88 62"/>
-    <!-- Ствол -->
-    <path d="M150 46 L180 46 L180 50 L150 50"/>
-    <!-- Газовая трубка -->
-    <path d="M125 38 L135 30 L170 30 L175 34"/>
-    <!-- Мушка -->
-    <path d="M178 46 L178 42 M182 46 L182 42 M178 42 L182 42"/>
-  </svg>`,
-
-  // M4A4 — другой силуэт
-  rifle_m4: `<svg viewBox="0 0 200 80" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
-    <!-- Приклад -->
-    <path d="M12 45 L35 40 L55 40 L58 45 L58 55 L55 60 L35 60 L15 55 Z" fill="currentColor" opacity="0.25"/>
-    <path d="M12 45 L35 40 L55 40 L58 45 L58 55 L55 60 L35 60 L15 55 Z"/>
-    <!-- Корпус -->
-    <path d="M58 44 L68 38 L125 38 L130 42 L148 42 L148 52 L130 52 L125 56 L68 56 Z" fill="currentColor" opacity="0.15"/>
-    <path d="M58 44 L68 38 L125 38 L130 42 L148 42 L148 52 L130 52 L125 56 L68 56 Z"/>
-    <!-- Магазин -->
-    <path d="M78 56 L74 72 L92 72 L96 56 Z" fill="currentColor" opacity="0.3"/>
-    <path d="M78 56 L74 72 L92 72 L96 56 Z"/>
-    <!-- Рукоятка -->
-    <path d="M70 56 L64 72 L74 72 L78 56 Z" fill="currentColor" opacity="0.3"/>
-    <path d="M70 56 L64 72 L74 72 L78 56 Z"/>
-    <!-- Ствол -->
-    <path d="M148 44 L182 44 L182 50 L148 50"/>
-    <!-- Планка -->
-    <path d="M120 38 L130 30 L175 30 L180 38"/>
-  </svg>`,
-
-  // AWP — снайперка с длинным стволом и прицелом
-  sniper_awp: `<svg viewBox="0 0 200 80" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
-    <!-- Приклад -->
-    <path d="M8 42 L35 38 L58 38 L62 45 L62 58 L55 62 L30 62 L12 55 Z" fill="currentColor" opacity="0.25"/>
-    <path d="M8 42 L35 38 L58 38 L62 45 L62 58 L55 62 L30 62 L12 55 Z"/>
-    <!-- Корпус -->
-    <path d="M62 44 L72 38 L120 38 L125 44 L150 44 L150 52 L125 52 L120 56 L72 56 Z" fill="currentColor" opacity="0.15"/>
-    <path d="M62 44 L72 38 L120 38 L125 44 L150 44 L150 52 L125 52 L120 56 L72 56 Z"/>
-    <!-- Магазин -->
-    <path d="M85 56 L82 68 L96 68 L99 56 Z" fill="currentColor" opacity="0.3"/>
-    <path d="M85 56 L82 68 L96 68 L99 56 Z"/>
-    <!-- Рукоятка -->
-    <path d="M70 56 L64 72 L74 72 L78 56 Z" fill="currentColor" opacity="0.3"/>
-    <path d="M70 56 L64 72 L74 72 L78 56 Z"/>
-    <!-- Длинный ствол -->
-    <path d="M150 44 L190 44 L190 50 L150 50"/>
-    <!-- Прицел -->
-    <path d="M95 38 L95 28 L125 28 L125 38"/>
-    <circle cx="110" cy="33" r="3"/>
-    <path d="M98 30 L122 30"/>
-  </svg>`,
-
-  // Desert Eagle — крупный пистолет
-  pistol_deagle: `<svg viewBox="0 0 140 80" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
-    <!-- Слайд -->
-    <path d="M30 30 L100 30 L105 35 L105 45 L30 45 Z" fill="currentColor" opacity="0.2"/>
-    <path d="M30 30 L100 30 L105 35 L105 45 L30 45 Z"/>
-    <!-- Ствол -->
-    <path d="M100 32 L125 32 L125 42 L100 42"/>
-    <!-- Рукоятка -->
-    <path d="M35 45 L30 72 L55 72 L60 45 Z" fill="currentColor" opacity="0.3"/>
-    <path d="M35 45 L30 72 L55 72 L60 45 Z"/>
-    <!-- Спусковая скоба -->
-    <path d="M60 45 Q60 55 70 55 L78 55"/>
-    <!-- Мушка -->
-    <path d="M98 30 L98 27 L102 27 L102 30"/>
-  </svg>`,
-
-  // Glock — компактный
-  pistol_glock: `<svg viewBox="0 0 140 80" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
-    <path d="M35 32 L95 32 L100 37 L100 46 L35 46 Z" fill="currentColor" opacity="0.2"/>
-    <path d="M35 32 L95 32 L100 37 L100 46 L35 46 Z"/>
-    <path d="M95 34 L115 34 L115 42 L95 42"/>
-    <path d="M40 46 L35 72 L55 72 L60 46 Z" fill="currentColor" opacity="0.3"/>
-    <path d="M40 46 L35 72 L55 72 L60 46 Z"/>
-    <path d="M62 46 Q62 54 70 54 L76 54"/>
-  </svg>`,
-
-  // Нож — бабочка/карамбit
-  knife_karambit: `<svg viewBox="0 0 140 80" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round" stroke-linecap="round">
-    <!-- Лезвие изогнутое -->
-    <path d="M25 50 Q40 15 70 25 Q90 35 95 55 Q85 45 70 40 Q45 35 35 55 Z" fill="currentColor" opacity="0.3"/>
-    <path d="M25 50 Q40 15 70 25 Q90 35 95 55 Q85 45 70 40 Q45 35 35 55 Z"/>
-    <!-- Рукоятка -->
-    <path d="M30 55 L20 72 L35 75 L45 58 Z" fill="currentColor" opacity="0.2"/>
-    <path d="M30 55 L20 72 L35 75 L45 58 Z"/>
-    <!-- Кольцо -->
-    <circle cx="22" cy="74" r="6"/>
-  </svg>`,
 };
+
+// Оружие: для всех используем ту же картинку AK (потом подменишь своими)
+function weaponImg(weaponType) {
+  // пока все на одной картинке — заглушка
+  return akImg();
+}
 
 function renderIcons(root = document) {
   root.querySelectorAll('.ico[data-icon]').forEach(el => {
@@ -887,10 +786,7 @@ function showScreen(id) {
 /* ==================== НАВИГАЦИЯ ==================== */
 function openMode(mode) {
   if (mode === 'cases') showScreen('cases');
-  else if (mode === 'upgrade') {
-    showScreen('upgrade');
-    updateUpgradeChance();
-  }
+  else if (mode === 'upgrade') { showScreen('upgrade'); updateUpgradeChance(); }
   updateBalance();
 }
 function backToMenu() { showScreen('menu'); updateBalance(); }
@@ -911,24 +807,20 @@ function openProfile() {
 
 /* ==================== ДЕМО-СКИНЫ ==================== */
 const DEMO_SKINS = [
-  { id: 1,  name: 'AK-47 | Пустынный шторм',    weapon: 'rifle_ak',        rarity: 'common',    wear: 'FT', price: 120 },
-  { id: 2,  name: 'M4A4 | Песчаная буря',       weapon: 'rifle_m4',        rarity: 'uncommon',  wear: 'MW', price: 340 },
-  { id: 3,  name: 'AWP | Выжженная земля',      weapon: 'sniper_awp',      rarity: 'rare',      wear: 'FT', price: 890 },
-  { id: 4,  name: 'Desert Eagle | Пыль',        weapon: 'pistol_deagle',   rarity: 'mythical',  wear: 'FN', price: 1450 },
-  { id: 5,  name: 'Karambit | Золото пустыни',  weapon: 'knife_karambit', rarity: 'legendary', wear: 'FN', price: 4200 },
-  { id: 6,  name: 'Glock-18 | Обгоревший',      weapon: 'pistol_glock',    rarity: 'uncommon',  wear: 'BS', price: 220 },
-  { id: 7,  name: 'AWP | Песчаный вихрь',       weapon: 'sniper_awp',      rarity: 'common',    wear: 'WW', price: 80 },
-  { id: 8,  name: 'M4A4 | Закат',               weapon: 'rifle_m4',        rarity: 'rare',      wear: 'FT', price: 720 },
-  { id: 9,  name: 'Karambit | Пустынный клинок', weapon: 'knife_karambit', rarity: 'legendary', wear: 'FN', price: 5100 },
-  { id: 10, name: 'Glock-18 | Сухой ветер',     weapon: 'pistol_glock',    rarity: 'common',    wear: 'FT', price: 60 },
+  { id: 1,  name: 'AK-47 | Пустынный шторм',    weapon: 'ak',    rarity: 'common',    wear: 'FT', price: 120 },
+  { id: 2,  name: 'M4A4 | Песчаная буря',       weapon: 'ak',    rarity: 'uncommon',  wear: 'MW', price: 340 },
+  { id: 3,  name: 'AWP | Выжженная земля',      weapon: 'ak',    rarity: 'rare',      wear: 'FT', price: 890 },
+  { id: 4,  name: 'Desert Eagle | Пыль',        weapon: 'ak',    rarity: 'mythical',  wear: 'FN', price: 1450 },
+  { id: 5,  name: 'Karambit | Золото пустыни',  weapon: 'ak',    rarity: 'legendary', wear: 'FN', price: 4200 },
+  { id: 6,  name: 'Glock-18 | Обгоревший',      weapon: 'ak',    rarity: 'uncommon',  wear: 'BS', price: 220 },
+  { id: 7,  name: 'AWP | Песчаный вихрь',       weapon: 'ak',    rarity: 'common',    wear: 'WW', price: 80 },
+  { id: 8,  name: 'M4A4 | Закат',               weapon: 'ak',    rarity: 'rare',      wear: 'FT', price: 720 },
+  { id: 9,  name: 'Karambit | Пустынный клинок', weapon: 'ak',    rarity: 'legendary', wear: 'FN', price: 5100 },
+  { id: 10, name: 'Glock-18 | Сухой ветер',     weapon: 'ak',    rarity: 'common',    wear: 'FT', price: 60 },
 ];
 
 const RARITY_WEIGHTS = {
-  common:    50,
-  uncommon:  25,
-  rare:      15,
-  mythical:  7,
-  legendary: 2.5,
+  common: 50, uncommon: 25, rare: 15, mythical: 7, legendary: 2.5,
 };
 
 function pickRandomSkin() {
@@ -972,7 +864,7 @@ function makeSlot(skin) {
   const el = document.createElement('div');
   el.className = 'slot ' + skin.rarity;
   el.innerHTML = `
-    <div class="slot-img">${ICONS[skin.weapon] || ICONS.rifle_ak}</div>
+    <div class="slot-img">${weaponImg(skin.weapon)}</div>
     <div class="slot-name">${skin.name.split('|')[0].trim()}</div>
     <div class="slot-wear">${skin.wear}</div>
   `;
@@ -1034,7 +926,7 @@ function mainCaseAction() {
 function pickFromSkin() {
   const skin = DEMO_SKINS[Math.floor(Math.random() * DEMO_SKINS.length)];
   state.upgrade.fromSkin = skin;
-  $('upFromPreview').innerHTML = ICONS[skin.weapon];
+  $('upFromPreview').innerHTML = weaponImg(skin.weapon);
   $('upFromName').textContent = skin.name;
   $('upFromWear').textContent = skin.wear;
   $('upFromPrice').textContent = skin.price + ' ₽';
@@ -1044,7 +936,7 @@ function pickFromSkin() {
 function pickToSkin() {
   const skin = DEMO_SKINS[Math.floor(Math.random() * DEMO_SKINS.length)];
   state.upgrade.toSkin = skin;
-  $('upToPreview').innerHTML = ICONS[skin.weapon];
+  $('upToPreview').innerHTML = weaponImg(skin.weapon);
   $('upToName').textContent = skin.name;
   $('upToWear').textContent = skin.wear;
   $('upToPrice').textContent = skin.price + ' ₽';
@@ -1073,6 +965,9 @@ function updateUpgradeChance() {
   $('upgradeCircle').style.setProperty('--p', state.upgrade.chance + '%');
 }
 
+/* ==== Вращение стрелки ==== */
+// Успех: стрелка встаёт на угол, соответствующий шансу
+// Провал: стрелка чуть-чуть не долетает или перелетает
 function doUpgrade() {
   if (!state.upgrade.fromSkin || !state.upgrade.toSkin) {
     toastText('Выбери оба скина');
@@ -1087,18 +982,53 @@ function doUpgrade() {
   btn.textContent = 'Крутим...';
   
   const arrow = $('upgradeArrow');
-  arrow.classList.remove('spinning');
+  const success = Math.random() * 100 < state.upgrade.chance;
+  const chance = state.upgrade.chance;
+  
+  // Определяем, куда встанет стрелка
+  let finalAngle;
+  let extraSpins = 3; // сколько полных оборотов «накрутить»
+  
+  if (success) {
+    // Успех: стрелка встаёт точно в «зону успеха» (угол = chance% от 360°)
+    // Добавляем небольшой случайный разброс в пределах зоны
+    const zoneStart = 0;
+    const zoneEnd = (chance / 100) * 360;
+    const finalInZone = zoneStart + Math.random() * (zoneEnd - zoneStart) * 0.9;
+    finalAngle = 360 * extraSpins + finalInZone;
+  } else {
+    // Провал: стрелка останавливается за пределами «зоны успеха»
+    // но близко к её границе — либо чуть не долетает, либо чуть перелетает
+    const zoneEnd = (chance / 100) * 360;
+    const tooFar = zoneEnd + 5 + Math.random() * 40; // от 5 до 45° после зоны
+    // Иногда «не долетает» — прибавляем 320° (почти полный оборот) чтобы попасть перед зоной
+    const mode = Math.random() < 0.5 ? 'over' : 'under';
+    
+    if (mode === 'over') {
+      finalAngle = 360 * extraSpins + tooFar;
+    } else {
+      // не долетает — стрелка останавливается чуть-чуть ПЕРЕД зоной успеха
+      // то есть на 360° + (360° - 5..15°)
+      const under = 360 - (2 + Math.random() * 8);
+      finalAngle = 360 * (extraSpins - 1) + under;
+    }
+  }
+  
+  // Сбрасываем предыдущий transform
+  arrow.style.transition = 'none';
+  arrow.style.transform = `translateX(-50%) rotate(0deg)`;
   void arrow.offsetWidth;
-  arrow.classList.add('spinning');
+  
+  // Запускаем анимацию
+  arrow.style.transition = `transform 2.8s cubic-bezier(0.15, 0.7, 0.15, 1)`;
+  arrow.style.transform = `translateX(-50%) rotate(${finalAngle}deg)`;
   
   setTimeout(() => {
     state.isSpinning = false;
-    arrow.classList.remove('spinning');
     btn.disabled = false;
     btn.classList.remove('disabled');
     btn.textContent = 'Прокачать';
     
-    const success = Math.random() * 100 < state.upgrade.chance;
     if (success) {
       toastText('Успех! Получен: ' + state.upgrade.toSkin.name);
       state.skinsValue += state.upgrade.toSkin.price;
@@ -1106,7 +1036,7 @@ function doUpgrade() {
       toastText('Провал...');
     }
     updateBalance();
-  }, 3100);
+  }, 2900);
 }
 
 /* ==================== ПРОЧЕЕ ==================== */
