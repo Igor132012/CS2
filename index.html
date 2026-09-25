@@ -28,6 +28,15 @@
     --gold2:   #ffd966;
     --ct:      #4a6b8a;
     --green:   #6fbf4a;
+
+    /* Цвета редкостей CS2 */
+    --r-consumer:   #b0c3d9; /* Белый/Серый */
+    --r-industrial: #5e98d9; /* Светло-синий */
+    --r-milspec:    #4b69ff; /* Синий */
+    --r-restricted: #8847ff; /* Фиолетовый */
+    --r-classified: #d32ce6; /* Розовый */
+    --r-covert:     #eb4b4b; /* Красный */
+    --r-rare:       #ffd700; /* Золотой (Ножи) */
   }
 
   #bg {
@@ -204,16 +213,21 @@
   }
   .slot .slot-wear { font-size:7px; opacity:.6; }
 
-  .slot.common    { border-color:#6b5f48; color:#a89678; }
-  .slot.common .slot-img { color:#a89678; }
-  .slot.uncommon  { border-color:var(--ct); color:#7a9ab8; }
-  .slot.uncommon .slot-img { color:#7a9ab8; }
-  .slot.rare      { border-color:#8a5a9a; color:#b070c0; }
-  .slot.rare .slot-img { color:#b070c0; }
-  .slot.mythical  { border-color:var(--accent); color:var(--accent); }
-  .slot.mythical .slot-img { color:var(--accent); }
-  .slot.legendary { border-color:var(--gold); color:var(--gold2); }
-  .slot.legendary .slot-img { color:var(--gold2); }
+  /* Цвета слотов по редкости CS2 */
+  .slot.consumer   { border-color:var(--r-consumer); color:var(--r-consumer); }
+  .slot.consumer .slot-img { color:var(--r-consumer); }
+  .slot.industrial { border-color:var(--r-industrial); color:var(--r-industrial); }
+  .slot.industrial .slot-img { color:var(--r-industrial); }
+  .slot.milspec    { border-color:var(--r-milspec); color:var(--r-milspec); }
+  .slot.milspec .slot-img { color:var(--r-milspec); }
+  .slot.restricted { border-color:var(--r-restricted); color:var(--r-restricted); }
+  .slot.restricted .slot-img { color:var(--r-restricted); }
+  .slot.classified { border-color:var(--r-classified); color:var(--r-classified); }
+  .slot.classified .slot-img { color:var(--r-classified); }
+  .slot.covert     { border-color:var(--r-covert); color:var(--r-covert); }
+  .slot.covert .slot-img { color:var(--r-covert); }
+  .slot.rare       { border-color:var(--r-rare); color:var(--r-rare); }
+  .slot.rare .slot-img { color:var(--r-rare); }
 
   .pointer {
     position:absolute; top:50%; left:50%;
@@ -676,23 +690,16 @@ const tg = window.Telegram?.WebApp;
 if (tg) { tg.ready(); tg.expand(); }
 
 /* ============================================================
-   ⚠️ СЮДА ВСТАВЬ СВОЮ КАРТИНКУ AK
-   ————————————————————————————————————————————————————————
-   Как получить base64-строку:
-   1. Открой в Termux: base64 -w 0 ak.png (где ak.png — твой файл)
-   2. Скопируй вывод — он начинается с "iVBORw0KGgo..." (без data:...)
-   3. Вставь в AK_BASE64 ниже между кавычками
+   КАРТИНКИ ИЗ РЕПОЗИТОРИЯ
    ============================================================ */
-const AK_BASE64 = "";  // ← сюда вставь строку base64 без префикса "data:image/png;base64,"
+const IMG_RIFLE = "img/rifle.png";   // путь к твоей картинке винтовки
+const IMG_KNIFE = "img/knife.png";   // путь к твоей картинке ножа
 
-function akImg() {
-  if (AK_BASE64) {
-    return `<img src="data:image/png;base64,${AK_BASE64}" alt="">`;
+function weaponImg(weaponType) {
+  if (weaponType === 'knife') {
+    return `<img src="${IMG_KNIFE}" alt="">`;
   }
-  // Заглушка — пока картинки нет, показываем простую SVG
-  return `<svg viewBox="0 0 200 80" fill="none">
-    <text x="100" y="45" text-anchor="middle" fill="#8a7754" font-size="10" font-family="sans-serif">вставь ak.png в AK_BASE64</text>
-  </svg>`;
+  return `<img src="${IMG_RIFLE}" alt="">`;
 }
 
 /* ==================== SVG: ИКОНКИ ==================== */
@@ -718,12 +725,6 @@ const ICONS = {
     <path d="M6 6 L18 18M18 6 L6 18"/>
   </svg>`,
 };
-
-// Оружие: для всех используем ту же картинку AK (потом подменишь своими)
-function weaponImg(weaponType) {
-  // пока все на одной картинке — заглушка
-  return akImg();
-}
 
 function renderIcons(root = document) {
   root.querySelectorAll('.ico[data-icon]').forEach(el => {
@@ -806,21 +807,29 @@ function openProfile() {
 }
 
 /* ==================== ДЕМО-СКИНЫ ==================== */
+/* Редкости CS2:
+   consumer, industrial, milspec, restricted, classified, covert, rare (ножи) */
 const DEMO_SKINS = [
-  { id: 1,  name: 'AK-47 | Пустынный шторм',    weapon: 'ak',    rarity: 'common',    wear: 'FT', price: 120 },
-  { id: 2,  name: 'M4A4 | Песчаная буря',       weapon: 'ak',    rarity: 'uncommon',  wear: 'MW', price: 340 },
-  { id: 3,  name: 'AWP | Выжженная земля',      weapon: 'ak',    rarity: 'rare',      wear: 'FT', price: 890 },
-  { id: 4,  name: 'Desert Eagle | Пыль',        weapon: 'ak',    rarity: 'mythical',  wear: 'FN', price: 1450 },
-  { id: 5,  name: 'Karambit | Золото пустыни',  weapon: 'ak',    rarity: 'legendary', wear: 'FN', price: 4200 },
-  { id: 6,  name: 'Glock-18 | Обгоревший',      weapon: 'ak',    rarity: 'uncommon',  wear: 'BS', price: 220 },
-  { id: 7,  name: 'AWP | Песчаный вихрь',       weapon: 'ak',    rarity: 'common',    wear: 'WW', price: 80 },
-  { id: 8,  name: 'M4A4 | Закат',               weapon: 'ak',    rarity: 'rare',      wear: 'FT', price: 720 },
-  { id: 9,  name: 'Karambit | Пустынный клинок', weapon: 'ak',    rarity: 'legendary', wear: 'FN', price: 5100 },
-  { id: 10, name: 'Glock-18 | Сухой ветер',     weapon: 'ak',    rarity: 'common',    wear: 'FT', price: 60 },
+  { id: 1,  name: 'AK-47 | Пустынный шторм',    weapon: 'rifle', rarity: 'consumer',   wear: 'FT', price: 120 },
+  { id: 2,  name: 'M4A4 | Песчаная буря',       weapon: 'rifle', rarity: 'industrial', wear: 'MW', price: 340 },
+  { id: 3,  name: 'AWP | Выжженная земля',      weapon: 'rifle', rarity: 'milspec',    wear: 'FT', price: 890 },
+  { id: 4,  name: 'Desert Eagle | Пыль',        weapon: 'rifle', rarity: 'restricted', wear: 'FN', price: 1450 },
+  { id: 5,  name: 'Karambit | Золото пустыни',  weapon: 'knife', rarity: 'rare',       wear: 'FN', price: 4200 },
+  { id: 6,  name: 'Glock-18 | Обгоревший',      weapon: 'rifle', rarity: 'classified', wear: 'BS', price: 220 },
+  { id: 7,  name: 'AWP | Песчаный вихрь',       weapon: 'rifle', rarity: 'covert',     wear: 'WW', price: 80 },
+  { id: 8,  name: 'M4A4 | Закат',               weapon: 'rifle', rarity: 'milspec',    wear: 'FT', price: 720 },
+  { id: 9,  name: 'Butterfly | Пустынный клинок', weapon: 'knife', rarity: 'rare',     wear: 'FN', price: 5100 },
+  { id: 10, name: 'Glock-18 | Сухой ветер',     weapon: 'rifle', rarity: 'consumer',   wear: 'FT', price: 60 },
 ];
 
 const RARITY_WEIGHTS = {
-  common: 50, uncommon: 25, rare: 15, mythical: 7, legendary: 2.5,
+  consumer:   50,
+  industrial: 25,
+  milspec:    15,
+  restricted: 7,
+  classified: 2.5,
+  covert:     0.8,
+  rare:       0.2,
 };
 
 function pickRandomSkin() {
@@ -930,11 +939,26 @@ function pickFromSkin() {
   $('upFromName').textContent = skin.name;
   $('upFromWear').textContent = skin.wear;
   $('upFromPrice').textContent = skin.price + ' ₽';
+  // Сбрасываем целевой скин, если он дешевле нового "твоего"
+  if (state.upgrade.toSkin && state.upgrade.toSkin.price <= skin.price) {
+    state.upgrade.toSkin = null;
+    $('upToPreview').innerHTML = '';
+    $('upToName').textContent = 'Нажми, чтобы выбрать';
+    $('upToWear').textContent = '—';
+    $('upToPrice').textContent = '0 ₽';
+  }
   updateUpgradeChance();
 }
 
 function pickToSkin() {
-  const skin = DEMO_SKINS[Math.floor(Math.random() * DEMO_SKINS.length)];
+  const from = state.upgrade.fromSkin;
+  // Фильтруем: только скины дороже "твоего"
+  const pool = DEMO_SKINS.filter(s => !from || s.price > from.price);
+  if (!pool.length) {
+    toastText('Сначала выбери свой скин');
+    return;
+  }
+  const skin = pool[Math.floor(Math.random() * pool.length)];
   state.upgrade.toSkin = skin;
   $('upToPreview').innerHTML = weaponImg(skin.weapon);
   $('upToName').textContent = skin.name;
@@ -965,9 +989,6 @@ function updateUpgradeChance() {
   $('upgradeCircle').style.setProperty('--p', state.upgrade.chance + '%');
 }
 
-/* ==== Вращение стрелки ==== */
-// Успех: стрелка встаёт на угол, соответствующий шансу
-// Провал: стрелка чуть-чуть не долетает или перелетает
 function doUpgrade() {
   if (!state.upgrade.fromSkin || !state.upgrade.toSkin) {
     toastText('Выбери оба скина');
@@ -985,41 +1006,31 @@ function doUpgrade() {
   const success = Math.random() * 100 < state.upgrade.chance;
   const chance = state.upgrade.chance;
   
-  // Определяем, куда встанет стрелка
   let finalAngle;
-  let extraSpins = 3; // сколько полных оборотов «накрутить»
+  const extraSpins = 3;
   
   if (success) {
-    // Успех: стрелка встаёт точно в «зону успеха» (угол = chance% от 360°)
-    // Добавляем небольшой случайный разброс в пределах зоны
     const zoneStart = 0;
     const zoneEnd = (chance / 100) * 360;
     const finalInZone = zoneStart + Math.random() * (zoneEnd - zoneStart) * 0.9;
     finalAngle = 360 * extraSpins + finalInZone;
   } else {
-    // Провал: стрелка останавливается за пределами «зоны успеха»
-    // но близко к её границе — либо чуть не долетает, либо чуть перелетает
     const zoneEnd = (chance / 100) * 360;
-    const tooFar = zoneEnd + 5 + Math.random() * 40; // от 5 до 45° после зоны
-    // Иногда «не долетает» — прибавляем 320° (почти полный оборот) чтобы попасть перед зоной
+    const tooFar = zoneEnd + 5 + Math.random() * 40;
     const mode = Math.random() < 0.5 ? 'over' : 'under';
     
     if (mode === 'over') {
       finalAngle = 360 * extraSpins + tooFar;
     } else {
-      // не долетает — стрелка останавливается чуть-чуть ПЕРЕД зоной успеха
-      // то есть на 360° + (360° - 5..15°)
       const under = 360 - (2 + Math.random() * 8);
       finalAngle = 360 * (extraSpins - 1) + under;
     }
   }
   
-  // Сбрасываем предыдущий transform
   arrow.style.transition = 'none';
   arrow.style.transform = `translateX(-50%) rotate(0deg)`;
   void arrow.offsetWidth;
   
-  // Запускаем анимацию
   arrow.style.transition = `transform 2.8s cubic-bezier(0.15, 0.7, 0.15, 1)`;
   arrow.style.transform = `translateX(-50%) rotate(${finalAngle}deg)`;
   
