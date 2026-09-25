@@ -30,13 +30,15 @@
     --green:   #6fbf4a;
 
     /* Цвета редкостей CS2 */
-    --r-consumer:   #b0c3d9; /* Белый/Серый */
-    --r-industrial: #5e98d9; /* Светло-синий */
-    --r-milspec:    #4b69ff; /* Синий */
-    --r-restricted: #8847ff; /* Фиолетовый */
-    --r-classified: #d32ce6; /* Розовый */
-    --r-covert:     #eb4b4b; /* Красный */
-    --r-rare:       #ffd700; /* Золотой (Ножи) */
+    --r-consumer:   #b0c3d9;
+    --r-industrial: #5e98d9;
+    --r-milspec:    #4b69ff;
+    --r-restricted: #8847ff;
+    --r-classified: #d32ce6;
+    --r-covert:     #eb4b4b;
+    --r-rare:       #ffd700;
+    --r-contraband: #e4ae39;
+    --r-stattrak:   #cf6a32;  /* оранжевый StatTrak [citation:10] */
   }
 
   #bg {
@@ -175,7 +177,6 @@
   .case-item .price .ico { font-size:14px; }
   .case-item.case-sub { border-color:var(--green); }
 
-  /* Рулетка */
   .roulette-stage {
     flex:1; display:flex; flex-direction:column;
     align-items:center; justify-content:center;
@@ -212,8 +213,8 @@
     max-width:90px;
   }
   .slot .slot-wear { font-size:7px; opacity:.6; }
+  .slot .slot-stattrak { font-size:7px; color:var(--r-stattrak); font-weight:600; }
 
-  /* Цвета слотов по редкости CS2 */
   .slot.consumer   { border-color:var(--r-consumer); color:var(--r-consumer); }
   .slot.consumer .slot-img { color:var(--r-consumer); }
   .slot.industrial { border-color:var(--r-industrial); color:var(--r-industrial); }
@@ -228,6 +229,8 @@
   .slot.covert .slot-img { color:var(--r-covert); }
   .slot.rare       { border-color:var(--r-rare); color:var(--r-rare); }
   .slot.rare .slot-img { color:var(--r-rare); }
+  .slot.contraband { border-color:var(--r-contraband); color:var(--r-contraband); }
+  .slot.contraband .slot-img { color:var(--r-contraband); }
 
   .pointer {
     position:absolute; top:50%; left:50%;
@@ -338,6 +341,7 @@
   }
   .upgrade-percent span { font-size:18px; }
 
+  /* Треугольник вниз вместо стрелки */
   .upgrade-arrow-indicator {
     position:absolute; top:-8px; left:50%;
     transform:translateX(-50%) rotate(0deg);
@@ -346,7 +350,7 @@
     filter:drop-shadow(0 0 6px var(--gold2));
     transition:transform 2.8s cubic-bezier(0.15, 0.7, 0.15, 1);
   }
-  .upgrade-arrow-indicator svg { width:16px; height:22px; }
+  .upgrade-arrow-indicator svg { width:18px; height:22px; }
 
   .upgrade-chance {
     text-align:center; font-size:11px; color:var(--text3);
@@ -356,90 +360,64 @@
 
   .upgrade-controls { margin-top:auto; padding-top:8px; }
 
-  /* Профиль */
-  .profile-content { flex:1; padding:0 20px; overflow-y:auto; position:relative; z-index:2; }
-  .profile-card {
-    border:1px solid var(--border2); background:linear-gradient(180deg, var(--bg3), var(--bg2));
-    border-radius:12px;
-    padding:20px; margin-bottom:14px;
-    display:flex; align-items:center; gap:14px;
+  /* Модальное окно выбора скина */
+  .modal-overlay {
+    position:fixed; inset:0; background:rgba(0,0,0,0.85);
+    z-index:200; display:none; align-items:flex-end;
   }
-  .profile-avatar {
-    width:56px; height:56px; border-radius:50%;
-    border:1px solid var(--border2); flex-shrink:0;
+  .modal-overlay.show { display:flex; }
+  .modal-sheet {
+    width:100%; max-height:75vh; overflow-y:auto;
+    background:var(--bg2); border-top:1px solid var(--border2);
+    border-radius:20px 20px 0 0; padding:20px;
+  }
+  .modal-sheet h3 {
+    font-size:14px; color:var(--sand); letter-spacing:2px;
+    text-transform:uppercase; margin-bottom:14px; text-align:center;
+  }
+  .modal-item {
+    display:flex; align-items:center; gap:12px;
+    padding:10px 12px; border:1px solid var(--border);
+    border-radius:8px; margin-bottom:8px; cursor:pointer;
+    background:var(--bg);
+  }
+  .modal-item:active { border-color:var(--accent); }
+  .modal-item .mi-img {
+    width:60px; height:40px; flex-shrink:0;
     display:flex; align-items:center; justify-content:center;
-    color:var(--sand); background:var(--bg);
-    overflow:hidden;
   }
-  .profile-avatar img { width:100%; height:100%; object-fit:cover; }
-  .profile-avatar .ico { font-size:26px; }
-  .profile-info .name { font-size:16px; font-weight:500; color:var(--sand); }
-  .profile-info .username { color:var(--text3); font-size:12px; margin-top:3px; }
+  .modal-item .mi-img svg,
+  .modal-item .mi-img img { width:100%; height:100%; object-fit:contain; }
+  .modal-item .mi-info { flex:1; min-width:0; }
+  .modal-item .mi-name { font-size:12px; color:var(--sand); }
+  .modal-item .mi-wear { font-size:10px; color:var(--text3); margin-top:2px; }
+  .modal-item .mi-price { font-size:12px; color:var(--gold2); flex-shrink:0; }
+  .modal-empty { text-align:center; color:var(--text3); padding:30px 0; font-size:13px; }
 
-  .stats-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px; }
-  .stat-card {
-    border:1px solid var(--border); background:linear-gradient(180deg, var(--bg3), var(--bg2));
-    border-radius:10px; padding:16px 12px; text-align:center;
+  /* Инвентарь */
+  .inv-list { flex:1; padding:16px 20px; overflow-y:auto; position:relative; z-index:2; }
+  .inv-item {
+    display:flex; align-items:center; gap:12px;
+    padding:10px 12px; border:1px solid var(--border);
+    border-radius:10px; margin-bottom:8px; background:var(--bg2);
   }
-  .stat-card .stat-label {
-    font-size:9px; color:var(--text3); letter-spacing:2px; text-transform:uppercase;
-    margin-bottom:6px;
+  .inv-item .inv-img {
+    width:70px; height:44px; flex-shrink:0;
+    display:flex; align-items:center; justify-content:center;
   }
-  .stat-card .stat-value {
-    font-size:18px; font-weight:300; color:var(--sand);
-    font-variant-numeric:tabular-nums;
-  }
-
-  .section-title {
-    font-size:9px; color:var(--text3); letter-spacing:4px; text-transform:uppercase;
-    margin:18px 0 8px;
-  }
-
-  .promo-row { display:flex; gap:8px; }
-  .promo-input {
-    flex:1; min-width:0; background:var(--bg); border:1px solid var(--border);
-    border-radius:8px; padding:14px; color:var(--sand);
-    font-size:13px; outline:none; font-family:inherit;
-  }
-  .promo-input::placeholder { color:var(--text3); }
-  .promo-input:focus { border-color:var(--accent); }
-  .promo-btn {
-    background:linear-gradient(180deg, var(--bg3), var(--bg2)); border:1px solid var(--accent);
-    border-radius:8px; padding:0 20px; color:var(--sand);
-    font-size:12px; cursor:pointer; font-family:inherit;
-    flex-shrink:0;
-  }
-  .promo-btn:active { background:#4a2a1a; }
-
-  .pay-row { display:flex; gap:10px; margin-bottom:10px; }
-  .pay-btn {
-    flex:1; min-width:0; background:linear-gradient(180deg, var(--bg3), var(--bg2)); border:1px solid var(--border);
-    border-radius:10px; padding:16px 12px; color:var(--sand);
-    cursor:pointer; font-family:inherit; font-size:12px;
-    display:flex; flex-direction:column; align-items:center; gap:6px;
-  }
-  .pay-btn:active { border-color:var(--accent); }
-  .pay-btn .pay-icon { color:var(--gold2); }
-  .pay-btn .pay-icon .ico { font-size:24px; }
-  .pay-btn .pay-sub { font-size:9px; color:var(--text3); }
-
-  #toast {
-    position:fixed; top:50px; left:50%;
-    transform:translateX(-50%) translateY(-30px);
-    background:var(--bg2); color:var(--sand);
-    padding:12px 20px; border-radius:100px;
-    font-size:13px; z-index:100;
-    border:1px solid var(--accent);
-    transition:transform .3s, opacity .3s;
-    pointer-events:none; white-space:nowrap; opacity:0;
-  }
-  #toast.show { transform:translateX(-50%) translateY(0); opacity:1; }
+  .inv-item .inv-img svg,
+  .inv-item .inv-img img { width:100%; height:100%; object-fit:contain; }
+  .inv-item .inv-info { flex:1; min-width:0; }
+  .inv-item .inv-name { font-size:12px; color:var(--sand); }
+  .inv-item .inv-wear { font-size:10px; color:var(--text3); margin-top:2px; }
+  .inv-item .inv-stattrak { font-size:10px; color:var(--r-stattrak); margin-top:2px; }
+  .inv-item .inv-price { font-size:12px; color:var(--gold2); flex-shrink:0; }
+  .inv-empty { text-align:center; color:var(--text3); padding:50px 20px; font-size:13px; }
 </style>
 </head>
 <body>
 
 <div id="bg"></div>
-
 <div class="decor-crates">
   <div class="crate"></div>
   <div class="crate small"></div>
@@ -451,7 +429,6 @@
 <!-- МЕНЮ -->
 <div class="screen" id="menu">
   <div class="brand">C<span>S</span>2 · DUST 2</div>
-
   <div class="balance-block">
     <div class="balance-label">Баланс</div>
     <div class="balance-value" id="menuBalance">
@@ -462,17 +439,15 @@
 
   <div class="modes">
     <button class="mode-btn" onclick="openMode('cases')">
-      <div>
-        <div class="label">Кейсы</div>
-        <div class="sub">Открой контейнер</div>
-      </div>
+      <div><div class="label">Кейсы</div><div class="sub">Открой контейнер</div></div>
       <div class="arrow">→</div>
     </button>
     <button class="mode-btn" onclick="openMode('upgrade')">
-      <div>
-        <div class="label">Апгрейдер</div>
-        <div class="sub">Обменяй скины</div>
-      </div>
+      <div><div class="label">Апгрейдер</div><div class="sub">Обменяй скины</div></div>
+      <div class="arrow">→</div>
+    </button>
+    <button class="mode-btn" onclick="openMode('inventory')">
+      <div><div class="label">Инвентарь</div><div class="sub">Мои скины</div></div>
       <div class="arrow">→</div>
     </button>
   </div>
@@ -485,86 +460,28 @@
 <!-- КЕЙСЫ -->
 <div class="screen hidden" id="cases">
   <div class="topbar">
-    <button class="close-btn" onclick="backToMenu()">
-      <span class="ico" data-icon="close"></span>
-    </button>
-    <div class="topbar-balance">
-      <span class="ico" data-icon="ruble"></span>
-      <span id="casesBalance">0</span>
-    </div>
+    <button class="close-btn" onclick="backToMenu()"><span class="ico" data-icon="close"></span></button>
+    <div class="topbar-balance"><span class="ico" data-icon="ruble"></span><span id="casesBalance">0</span></div>
   </div>
-
-  <div class="cases-list">
-    <button class="case-item case-sub" onclick="openCaseScreen('subcase')">
-      <div class="info">
-        <div class="name">Бесплатный кейс</div>
-        <div class="range">Пыльные скины · раз в 24ч</div>
-      </div>
-      <div class="price">
-        <span class="ico" data-icon="gift"></span>
-        Free
-      </div>
-    </button>
-
-    <button class="case-item" onclick="openCaseScreen('case10')">
-      <div class="info">
-        <div class="name">Пыльный контейнер</div>
-        <div class="range">Песочные скины · от 1 ₽</div>
-      </div>
-      <div class="price">
-        <span class="ico" data-icon="ruble"></span>
-        10
-      </div>
-    </button>
-
-    <button class="case-item" onclick="openCaseScreen('case50')">
-      <div class="info">
-        <div class="name">Выжженный контейнер</div>
-        <div class="range">Пустынные скины · от 5 ₽</div>
-      </div>
-      <div class="price">
-        <span class="ico" data-icon="ruble"></span>
-        50
-      </div>
-    </button>
-
-    <button class="case-item" onclick="openCaseScreen('case100')">
-      <div class="info">
-        <div class="name">Золотой контейнер</div>
-        <div class="range">Covert скины · от 10 ₽</div>
-      </div>
-      <div class="price">
-        <span class="ico" data-icon="ruble"></span>
-        100
-      </div>
-    </button>
-  </div>
+  <div class="cases-list" id="casesList"></div>
 </div>
 
 <!-- ОТКРЫТИЕ КЕЙСА -->
 <div class="screen hidden" id="caseOpen">
   <div class="topbar">
-    <button class="close-btn" onclick="closeCase()">
-      <span class="ico" data-icon="close"></span>
-    </button>
-    <div class="topbar-balance">
-      <span class="ico" data-icon="ruble"></span>
-      <span id="openBalance">0</span>
-    </div>
+    <button class="close-btn" onclick="closeCase()"><span class="ico" data-icon="close"></span></button>
+    <div class="topbar-balance"><span class="ico" data-icon="ruble"></span><span id="openBalance">0</span></div>
   </div>
-
   <div class="roulette-stage">
     <div class="roulette">
       <div class="track" id="track"></div>
       <div class="pointer"></div>
     </div>
-
     <div class="spin-result" id="spinResult">
       <div class="label">Выпало</div>
       <div class="val" id="spinValue"></div>
     </div>
   </div>
-
   <div class="spin-controls">
     <button class="main-btn" id="spinBtn" onclick="mainCaseAction()">Открыть</button>
   </div>
@@ -573,28 +490,21 @@
 <!-- АПГРЕЙДЕР -->
 <div class="screen hidden" id="upgrade">
   <div class="topbar">
-    <button class="close-btn" onclick="backToMenu()">
-      <span class="ico" data-icon="close"></span>
-    </button>
-    <div class="topbar-balance">
-      <span class="ico" data-icon="ruble"></span>
-      <span id="upgradeBalance">0</span>
-    </div>
+    <button class="close-btn" onclick="backToMenu()"><span class="ico" data-icon="close"></span></button>
+    <div class="topbar-balance"><span class="ico" data-icon="ruble"></span><span id="upgradeBalance">0</span></div>
   </div>
-
   <div class="upgrade-stage">
     <div class="upgrade-pair">
-      <div class="upgrade-side" id="upgradeFrom" onclick="pickFromSkin()">
+      <div class="upgrade-side" id="upgradeFrom" onclick="pickFromInventory()">
         <div class="thumb" id="upFromPreview"></div>
         <div class="info">
           <div class="label">Твой скин</div>
-          <div class="name" id="upFromName">Нажми, чтобы выбрать</div>
+          <div class="name" id="upFromName">Выбрать из инвентаря</div>
           <div class="wear" id="upFromWear">—</div>
         </div>
         <div class="price" id="upFromPrice">0 ₽</div>
       </div>
-
-      <div class="upgrade-side" id="upgradeTo" onclick="pickToSkin()">
+      <div class="upgrade-side" id="upgradeTo" onclick="pickToTarget()">
         <div class="thumb" id="upToPreview"></div>
         <div class="info">
           <div class="label">Целевой скин</div>
@@ -604,81 +514,64 @@
         <div class="price" id="upToPrice">0 ₽</div>
       </div>
     </div>
-
     <div class="upgrade-circle-wrap">
       <div class="upgrade-arrow-indicator" id="upgradeArrow">
-        <svg viewBox="0 0 20 26" fill="none">
-          <path d="M10 26 L10 2 M2 10 L10 2 L18 10"
-                stroke="#ffd966" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg viewBox="0 0 20 24" fill="none">
+          <path d="M10 2 L2 18 L18 18 Z" fill="#ffd966" stroke="#ffd966" stroke-width="1" stroke-linejoin="round"/>
         </svg>
       </div>
       <div class="upgrade-circle" id="upgradeCircle" style="--p: 0%;">
         <div class="upgrade-percent" id="upgradePercent">?%</div>
       </div>
     </div>
-
-    <div class="upgrade-chance">
-      Шанс успеха: <span id="upChance">0%</span>
-    </div>
-
+    <div class="upgrade-chance">Шанс успеха: <span id="upChance">0%</span></div>
     <div class="upgrade-controls">
       <button class="main-btn" id="upgradeBtn" onclick="doUpgrade()">Прокачать</button>
     </div>
   </div>
 </div>
 
+<!-- ИНВЕНТАРЬ -->
+<div class="screen hidden" id="inventory">
+  <div class="topbar">
+    <button class="close-btn" onclick="backToMenu()"><span class="ico" data-icon="close"></span></button>
+    <div class="topbar-balance"><span class="ico" data-icon="ruble"></span><span id="inventoryBalance">0</span></div>
+  </div>
+  <div class="inv-list" id="invList"></div>
+</div>
+
 <!-- ПРОФИЛЬ -->
 <div class="screen hidden" id="profile">
   <div class="topbar">
-    <button class="close-btn" onclick="backToMenu()">
-      <span class="ico" data-icon="close"></span>
-    </button>
-    <div class="topbar-balance">
-      <span class="ico" data-icon="ruble"></span>
-      <span id="profileBalance">0</span>
+    <button class="close-btn" onclick="backToMenu()"><span class="ico" data-icon="close"></span></button>
+    <div class="topbar-balance"><span class="ico" data-icon="ruble"></span><span id="profileBalance">0</span></div>
+  </div>
+  <div class="profile-content" style="flex:1;padding:0 20px;overflow-y:auto;">
+    <div class="profile-card" style="border:1px solid var(--border2);background:linear-gradient(180deg, var(--bg3), var(--bg2));border-radius:12px;padding:20px;margin-bottom:14px;display:flex;align-items:center;gap:14px;">
+      <div class="profile-avatar" id="avatar" style="width:56px;height:56px;border-radius:50%;border:1px solid var(--border2);display:flex;align-items:center;justify-content:center;color:var(--sand);background:var(--bg);overflow:hidden;"></div>
+      <div class="profile-info">
+        <div class="name" id="userName" style="font-size:16px;font-weight:500;color:var(--sand);">Гость</div>
+        <div class="username" id="userUsername" style="color:var(--text3);font-size:12px;margin-top:3px;">@username</div>
+      </div>
+    </div>
+    <div class="stats-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+      <div class="stat-card" style="border:1px solid var(--border);background:linear-gradient(180deg, var(--bg3), var(--bg2));border-radius:10px;padding:16px 12px;text-align:center;">
+        <div class="stat-label" style="font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">Доступно</div>
+        <div class="stat-value" id="statBalance" style="font-size:18px;font-weight:300;color:var(--sand);">0</div>
+      </div>
+      <div class="stat-card" style="border:1px solid var(--border);background:linear-gradient(180deg, var(--bg3), var(--bg2));border-radius:10px;padding:16px 12px;text-align:center;">
+        <div class="stat-label" style="font-size:9px;color:var(--text3);letter-spacing:2px;text-transform:uppercase;margin-bottom:6px;">В скинах</div>
+        <div class="stat-value" id="statSkins" style="font-size:18px;font-weight:300;color:var(--sand);">0</div>
+      </div>
     </div>
   </div>
+</div>
 
-  <div class="profile-content">
-    <div class="profile-card">
-      <div class="profile-avatar" id="avatar"></div>
-      <div class="profile-info">
-        <div class="name" id="userName">Гость</div>
-        <div class="username" id="userUsername">@username</div>
-      </div>
-    </div>
-
-    <div class="section-title">Баланс</div>
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-label">Доступно</div>
-        <div class="stat-value" id="statBalance">0</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-label">В скинах</div>
-        <div class="stat-value" id="statSkins">0</div>
-      </div>
-    </div>
-
-    <div class="section-title">Промокод</div>
-    <div class="promo-row">
-      <input type="text" class="promo-input" id="promoInput" placeholder="ВВЕДИ КОД" maxlength="16">
-      <button class="promo-btn" onclick="applyPromo()">ОК</button>
-    </div>
-
-    <div class="section-title">Действия</div>
-    <div class="pay-row">
-      <button class="pay-btn" onclick="withdrawOpen()">
-        <span class="pay-icon"><span class="ico" data-icon="ruble"></span></span>
-        <span class="pay-label">Вывод</span>
-        <span class="pay-sub">от 100 ₽</span>
-      </button>
-      <button class="pay-btn" onclick="openTopupSheet()">
-        <span class="pay-icon"><span class="ico" data-icon="ruble"></span></span>
-        <span class="pay-label">Пополнить</span>
-        <span class="pay-sub">Telegram Stars</span>
-      </button>
-    </div>
+<!-- МОДАЛКА ВЫБОРА СКИНА -->
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal(event)">
+  <div class="modal-sheet" onclick="event.stopPropagation()">
+    <h3 id="modalTitle">Выбор скина</h3>
+    <div id="modalList"></div>
   </div>
 </div>
 
@@ -692,38 +585,24 @@ if (tg) { tg.ready(); tg.expand(); }
 /* ============================================================
    КАРТИНКИ ИЗ РЕПОЗИТОРИЯ
    ============================================================ */
-const IMG_RIFLE = "rifle.png";   // путь к твоей картинке винтовки
-const IMG_KNIFE = "knife.png";   // путь к твоей картинке ножа
+const IMG_RIFLE = "rifle.png";
+const IMG_KNIFE = "knife.png";
+const IMG_SNIPER = "sniper_rifle.png";
+const IMG_GUN = "gun.png";
 
 function weaponImg(weaponType) {
-  if (weaponType === 'knife') {
-    return `<img src="${IMG_KNIFE}" alt="">`;
-  }
+  if (weaponType === 'knife')   return `<img src="${IMG_KNIFE}" alt="">`;
+  if (weaponType === 'sniper')  return `<img src="${IMG_SNIPER}" alt="">`;
+  if (weaponType === 'pistol')  return `<img src="${IMG_GUN}" alt="">`;
   return `<img src="${IMG_RIFLE}" alt="">`;
 }
 
-/* ==================== SVG: ИКОНКИ ==================== */
+/* ==================== SVG ИКОНКИ ==================== */
 const ICONS = {
-  ruble: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-         stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M6 21V4h5a5 5 0 0 1 0 10H6"/>
-    <path d="M6 14h8"/><path d="M6 18h6"/>
-  </svg>`,
-  gift: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-         stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-    <rect x="3" y="8" width="18" height="13" rx="1"/>
-    <path d="M3 12h18M12 8v13"/>
-    <path d="M12 8c-2 0-4-1-4-3s2-2 4 3c2-5 4-5 4-3s-2 3-4 3z"/>
-  </svg>`,
-  user: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-         stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
-    <circle cx="12" cy="8" r="4"/>
-    <path d="M4 21c0-4 4-7 8-7s8 3 8 7"/>
-  </svg>`,
-  close: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
-         stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M6 6 L18 18M18 6 L6 18"/>
-  </svg>`,
+  ruble: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21V4h5a5 5 0 0 1 0 10H6"/><path d="M6 14h8"/><path d="M6 18h6"/></svg>`,
+  gift: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="13" rx="1"/><path d="M3 12h18M12 8v13"/><path d="M12 8c-2 0-4-1-4-3s2-2 4 3c2-5 4-5 4-3s-2 3-4 3z"/></svg>`,
+  user: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-7 8-7s8 3 8 7"/></svg>`,
+  close: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 6 L18 18M18 6 L6 18"/></svg>`,
 };
 
 function renderIcons(root = document) {
@@ -736,7 +615,7 @@ function renderIcons(root = document) {
 /* ==================== СОСТОЯНИЕ ==================== */
 const state = {
   balance: 1000,
-  skinsValue: 0,
+  inventory: [],   // массив скинов пользователя
   currentCase: null,
   isSpinning: false,
   upgrade: { fromSkin: null, toSkin: null, chance: 0 },
@@ -766,9 +645,10 @@ function updateBalance() {
   $('casesBalance').textContent = fmt(state.balance);
   $('openBalance').textContent = fmt(state.balance);
   $('upgradeBalance').textContent = fmt(state.balance);
+  $('inventoryBalance').textContent = fmt(state.balance);
   $('profileBalance').textContent = fmt(state.balance);
   $('statBalance').textContent = fmt(state.balance);
-  $('statSkins').textContent = fmt(state.skinsValue);
+  $('statSkins').textContent = fmt(state.inventory.reduce((s, sk) => s + sk.price, 0));
 }
 
 function toastText(msg) {
@@ -784,10 +664,205 @@ function showScreen(id) {
   $(id).classList.remove('hidden');
 }
 
+/* ==================== КАТАЛОГ СКИНОВ ==================== */
+/* 
+  Цены приближены к Steam Market (в рублях).
+  Wear-диапазоны: FN 0.00-0.07, MW 0.07-0.15, FT 0.15-0.38, WW 0.38-0.45, BS 0.45-1.00 [citation:12]
+  StatTrak доступен на большинстве скинов оружия и некоторых ножах [citation:3][citation:10]
+*/
+const ALL_SKINS = [
+  // === ВИНТОВКИ ===
+  { id:'ak_redline',    name:'AK-47 | Красная линия',    weapon:'rifle',  rarity:'classified', basePrice:4200,  hasStatTrak:true },
+  { id:'ak_vulcan',     name:'AK-47 | Вулкан',           weapon:'rifle',  rarity:'covert',     basePrice:9800,  hasStatTrak:true },
+  { id:'ak_asiimov',    name:'AK-47 | Азимов',           weapon:'rifle',  rarity:'covert',     basePrice:3200,  hasStatTrak:true },
+  { id:'ak_nightwish',  name:'AK-47 | Пожелание на ночь',weapon:'rifle',  rarity:'covert',     basePrice:4600,  hasStatTrak:true },
+  { id:'ak_fire_serp',  name:'AK-47 | Огненный змей',    weapon:'rifle',  rarity:'covert',     basePrice:28000, hasStatTrak:true },
+  { id:'m4a4_howl',     name:'M4A4 | Вой',               weapon:'rifle',  rarity:'contraband', basePrice:380000, hasStatTrak:false },
+  { id:'m4a4_asiimov',  name:'M4A4 | Азимов',            weapon:'rifle',  rarity:'covert',     basePrice:5100,  hasStatTrak:true },
+  { id:'m4a1s_print',   name:'M4A1-S | Поток информации', weapon:'rifle',  rarity:'covert',     basePrice:2600,  hasStatTrak:true },
+  { id:'m4a4_temukau',  name:'M4A4 | Темукау',           weapon:'rifle',  rarity:'covert',     basePrice:1900,  hasStatTrak:true },
+  { id:'m4a1s_solitude',name:'M4A1-S | Одиночество',     weapon:'rifle',  rarity:'classified', basePrice:1100,  hasStatTrak:true },
+  { id:'m4a4_desolate', name:'M4A4 | Пустынное пространство', weapon:'rifle', rarity:'milspec',  basePrice:180,   hasStatTrak:true },
+  { id:'ak_slate',      name:'AK-47 | Шифер',            weapon:'rifle',  rarity:'milspec',    basePrice:95,    hasStatTrak:true },
+  { id:'galil_ar',      name:'Galil AR | Пустынный воин',weapon:'rifle',  rarity:'industrial', basePrice:45,    hasStatTrak:true },
+
+  // === СНАЙПЕРКИ ===
+  { id:'awp_dragon',    name:'AWP | Драконий огонь',     weapon:'sniper', rarity:'covert',     basePrice:420000, hasStatTrak:true },
+  { id:'awp_asiimov',   name:'AWP | Азимов',             weapon:'sniper', rarity:'covert',     basePrice:6800,  hasStatTrak:true },
+  { id:'awp_medusa',    name:'AWP | Медуза',             weapon:'sniper', rarity:'covert',     basePrice:26000, hasStatTrak:true },
+  { id:'awp_wildfire',  name:'AWP | Дикий огонь',        weapon:'sniper', rarity:'covert',     basePrice:8900,  hasStatTrak:true },
+  { id:'awp_neo',       name:'AWP | Нео-нуар',           weapon:'sniper', rarity:'covert',     basePrice:4600,  hasStatTrak:true },
+  { id:'awp_lightning', name:'AWP | Удар молнии',        weapon:'sniper', rarity:'classified', basePrice:2400,  hasStatTrak:true },
+  { id:'awp_snake',     name:'AWP | Змеиная кожа',       weapon:'sniper', rarity:'restricted', basePrice:340,   hasStatTrak:true },
+  { id:'ssg_blood',     name:'SSG 08 | Кровавая паутина',weapon:'sniper', rarity:'restricted', basePrice:220,   hasStatTrak:true },
+
+  // === ПИСТОЛЕТЫ ===
+  { id:'deagle_print',  name:'Desert Eagle | Поток информации', weapon:'pistol', rarity:'covert', basePrice:3500, hasStatTrak:true },
+  { id:'deagle_blaze',  name:'Desert Eagle | Пламя',     weapon:'pistol', rarity:'restricted', basePrice:1800, hasStatTrak:true },
+  { id:'deagle_codex',  name:'Desert Eagle | Кодекс',    weapon:'pistol', rarity:'classified', basePrice:490,  hasStatTrak:true },
+  { id:'usp_print',     name:'USP-S | Поток информации', weapon:'pistol', rarity:'covert',     basePrice:2300, hasStatTrak:true },
+  { id:'usp_kill',      name:'USP-S | Подтверждённое убийство', weapon:'pistol', rarity:'covert', basePrice:4200, hasStatTrak:true },
+  { id:'glock_fade',    name:'Glock-18 | Градиент',      weapon:'pistol', rarity:'restricted', basePrice:720,  hasStatTrak:true },
+  { id:'glock_water',   name:'Glock-18 | Элементаль',    weapon:'pistol', rarity:'restricted', basePrice:540,  hasStatTrak:true },
+  { id:'p250_asiimov',  name:'P250 | Азимов',            weapon:'pistol', rarity:'classified', basePrice:1200, hasStatTrak:true },
+  { id:'fiveseven_monkey', name:'Five-SeveN | Бешеный клоун', weapon:'pistol', rarity:'classified', basePrice:390, hasStatTrak:true },
+
+  // === НОЖИ ===
+  { id:'karambit_fade', name:'Karambit | Градиент',      weapon:'knife',  rarity:'rare',       basePrice:185000, hasStatTrak:true },
+  { id:'karambit_doppler', name:'Karambit | Доплер',     weapon:'knife',  rarity:'rare',       basePrice:92000,  hasStatTrak:true },
+  { id:'karambit_slaughter', name:'Karambit | Бойня',    weapon:'knife',  rarity:'rare',       basePrice:78000,  hasStatTrak:true },
+  { id:'butterfly_doppler', name:'Butterfly | Доплер',   weapon:'knife',  rarity:'rare',       basePrice:145000, hasStatTrak:true },
+  { id:'butterfly_fade', name:'Butterfly | Градиент',    weapon:'knife',  rarity:'rare',       basePrice:198000, hasStatTrak:true },
+  { id:'m9_bayonet',    name:'M9 Bayonet | Доплер',      weapon:'knife',  rarity:'rare',       basePrice:88000,  hasStatTrak:true },
+  { id:'bowie_slaughter', name:'Bowie | Бойня',          weapon:'knife',  rarity:'rare',       basePrice:34000,  hasStatTrak:true },
+  { id:'flip_doppler',  name:'Flip | Доплер',            weapon:'knife',  rarity:'rare',       basePrice:56000,  hasStatTrak:true },
+];
+
+/* ==================== ИЗНОС (WEAR) ==================== */
+/* Float-диапазоны из CS2 [citation:5][citation:12] */
+const WEARS = [
+  { key:'FN', name:'Прямо с завода',        range:[0.00, 0.07], mult:1.00 },
+  { key:'MW', name:'Немного поношенное',     range:[0.07, 0.15], mult:0.65 },
+  { key:'FT', name:'После полевых испытаний', range:[0.15, 0.38], mult:0.40 },
+  { key:'WW', name:'Поношенное',             range:[0.38, 0.45], mult:0.30 },
+  { key:'BS', name:'Закалённое в боях',      range:[0.45, 1.00], mult:0.22 },
+];
+
+function randomWear() {
+  // Большинство дропа — FT и BS (как в реальных кейсах)
+  const r = Math.random();
+  if (r < 0.03) return WEARS[0]; // FN 3%
+  if (r < 0.10) return WEARS[1]; // MW 7%
+  if (r < 0.45) return WEARS[2]; // FT 35%
+  if (r < 0.55) return WEARS[3]; // WW 10%
+  return WEARS[4];                // BS 45%
+}
+
+function createSkinInstance(skinDef) {
+  const wear = randomWear();
+  const statTrak = skinDef.hasStatTrak && Math.random() < 0.10; // 10% шанс StatTrak
+  let price = Math.round(skinDef.basePrice * wear.mult);
+  if (statTrak) price = Math.round(price * 1.35); // StatTrak дороже на ~35%
+  return {
+    id: skinDef.id + '_' + wear.key + (statTrak ? '_st' : ''),
+    skinId: skinDef.id,
+    name: skinDef.name,
+    weapon: skinDef.weapon,
+    rarity: skinDef.rarity,
+    wear: wear.key,
+    wearName: wear.name,
+    statTrak: statTrak,
+    price: price,
+  };
+}
+
+/* ==================== РЕДКОСТИ ==================== */
+const RARITY_WEIGHTS = {
+  consumer:   50,
+  industrial: 25,
+  milspec:    15,
+  restricted: 7,
+  classified: 2,
+  covert:     0.8,
+  rare:       0.15,
+  contraband: 0.02,
+};
+
+/* Подбор скина из пула кейса (с учётом редкости) */
+function pickSkinFromPool(pool) {
+  // Считаем общий вес только по редкостям, которые есть в пуле
+  const available = {};
+  pool.forEach(s => { available[s.rarity] = (available[s.rarity] || 0) + 1; });
+  let total = 0;
+  const weighted = {};
+  for (const r in RARITY_WEIGHTS) {
+    if (available[r]) {
+      weighted[r] = RARITY_WEIGHTS[r];
+      total += RARITY_WEIGHTS[r];
+    }
+  }
+  let roll = Math.random() * total;
+  for (const r in weighted) {
+    roll -= weighted[r];
+    if (roll <= 0) {
+      const poolOfRarity = pool.filter(s => s.rarity === r);
+      return poolOfRarity[Math.floor(Math.random() * poolOfRarity.length)];
+    }
+  }
+  return pool[0];
+}
+
+/* ==================== КЕЙСЫ ==================== */
+/* Каждый кейс: своя цена, свой пул скинов, матожидание выпадения < цены кейса */
+const CASES = {
+  case10: {
+    name: 'Пыльный контейнер',
+    range: 'Песочные скины',
+    price: 10,
+    pool: ['galil_ar', 'ak_slate', 'm4a4_desolate', 'ssg_blood', 'awp_snake'],
+  },
+  case50: {
+    name: 'Выжженный контейнер',
+    range: 'Пустынные скины',
+    price: 50,
+    pool: ['ak_slate', 'm4a4_desolate', 'awp_snake', 'ssg_blood', 'p250_asiimov', 'glock_water'],
+  },
+  case100: {
+    name: 'Золотой контейнер',
+    range: 'Редкие скины',
+    price: 100,
+    pool: ['awp_neo', 'awp_lightning', 'glock_fade', 'deagle_codex', 'p250_asiimov', 'usp_print'],
+  },
+  case500: {
+    name: 'Кейс пустыни',
+    range: 'Классические скины',
+    price: 500,
+    pool: ['ak_redline', 'ak_asiimov', 'm4a4_asiimov', 'm4a1s_solitude', 'deagle_blaze', 'usp_print'],
+  },
+  case1000: {
+    name: 'Легендарный контейнер',
+    range: 'Covert скины',
+    price: 1000,
+    pool: ['ak_vulcan', 'ak_nightwish', 'awp_asiimov', 'awp_medusa', 'awp_wildfire', 'm4a1s_print'],
+  },
+};
+
+function renderCasesList() {
+  const list = $('casesList');
+  list.innerHTML = '';
+
+  // Бесплатный кейс за подписку
+  list.innerHTML += `
+    <button class="case-item case-sub" onclick="openCaseScreen('subcase')">
+      <div class="info">
+        <div class="name">Бесплатный кейс</div>
+        <div class="range">Пыльные скины · раз в 24ч</div>
+      </div>
+      <div class="price"><span class="ico" data-icon="gift"></span>Free</div>
+    </button>
+  `;
+
+  // Платные кейсы
+  for (const key in CASES) {
+    const c = CASES[key];
+    list.innerHTML += `
+      <button class="case-item" onclick="openCaseScreen('${key}')">
+        <div class="info">
+          <div class="name">${c.name}</div>
+          <div class="range">${c.range} · от ${c.price} ₽</div>
+        </div>
+        <div class="price">${rubIco()}${c.price}</div>
+      </button>
+    `;
+  }
+  renderIcons(list);
+}
+
 /* ==================== НАВИГАЦИЯ ==================== */
 function openMode(mode) {
-  if (mode === 'cases') showScreen('cases');
+  if (mode === 'cases') { showScreen('cases'); renderCasesList(); }
   else if (mode === 'upgrade') { showScreen('upgrade'); updateUpgradeChance(); }
+  else if (mode === 'inventory') { showScreen('inventory'); renderInventory(); }
   updateBalance();
 }
 function backToMenu() { showScreen('menu'); updateBalance(); }
@@ -806,47 +881,7 @@ function openProfile() {
   showScreen('profile');
 }
 
-/* ==================== ДЕМО-СКИНЫ ==================== */
-/* Редкости CS2:
-   consumer, industrial, milspec, restricted, classified, covert, rare (ножи) */
-const DEMO_SKINS = [
-  { id: 1,  name: 'AK-47 | Пустынный шторм',    weapon: 'rifle', rarity: 'consumer',   wear: 'FT', price: 120 },
-  { id: 2,  name: 'M4A4 | Песчаная буря',       weapon: 'rifle', rarity: 'industrial', wear: 'MW', price: 340 },
-  { id: 3,  name: 'AWP | Выжженная земля',      weapon: 'rifle', rarity: 'milspec',    wear: 'FT', price: 890 },
-  { id: 4,  name: 'Desert Eagle | Пыль',        weapon: 'rifle', rarity: 'restricted', wear: 'FN', price: 1450 },
-  { id: 5,  name: 'Karambit | Золото пустыни',  weapon: 'knife', rarity: 'rare',       wear: 'FN', price: 4200 },
-  { id: 6,  name: 'Glock-18 | Обгоревший',      weapon: 'rifle', rarity: 'classified', wear: 'BS', price: 220 },
-  { id: 7,  name: 'AWP | Песчаный вихрь',       weapon: 'rifle', rarity: 'covert',     wear: 'WW', price: 80 },
-  { id: 8,  name: 'M4A4 | Закат',               weapon: 'rifle', rarity: 'milspec',    wear: 'FT', price: 720 },
-  { id: 9,  name: 'Butterfly | Пустынный клинок', weapon: 'knife', rarity: 'rare',     wear: 'FN', price: 5100 },
-  { id: 10, name: 'Glock-18 | Сухой ветер',     weapon: 'rifle', rarity: 'consumer',   wear: 'FT', price: 60 },
-];
-
-const RARITY_WEIGHTS = {
-  consumer:   50,
-  industrial: 25,
-  milspec:    15,
-  restricted: 7,
-  classified: 2.5,
-  covert:     0.8,
-  rare:       0.2,
-};
-
-function pickRandomSkin() {
-  let total = 0;
-  for (const k in RARITY_WEIGHTS) total += RARITY_WEIGHTS[k];
-  let r = Math.random() * total;
-  for (const k in RARITY_WEIGHTS) {
-    r -= RARITY_WEIGHTS[k];
-    if (r <= 0) {
-      const pool = DEMO_SKINS.filter(s => s.rarity === k);
-      if (pool.length) return pool[Math.floor(Math.random() * pool.length)];
-    }
-  }
-  return DEMO_SKINS[0];
-}
-
-/* ==================== КЕЙСЫ ==================== */
+/* ==================== КЕЙСЫ (ОТКРЫТИЕ) ==================== */
 function openCaseScreen(caseKey) {
   state.currentCase = caseKey;
   showScreen('caseOpen');
@@ -863,19 +898,30 @@ function fillTrack() {
   track.innerHTML = '';
   track.style.transition = 'none';
   track.style.transform = 'translateX(0)';
+  const pool = getPoolForCurrentCase();
   for (let i = 0; i < 60; i++) {
-    const skin = DEMO_SKINS[Math.floor(Math.random() * DEMO_SKINS.length)];
-    track.appendChild(makeSlot(skin));
+    const skinDef = pool[Math.floor(Math.random() * pool.length)];
+    track.appendChild(makeSlot(skinDef));
   }
 }
 
-function makeSlot(skin) {
+function getPoolForCurrentCase() {
+  if (state.currentCase === 'subcase') {
+    // Бесплатный кейс — самые дешёвые скины
+    return ALL_SKINS.filter(s => ['consumer', 'industrial', 'milspec'].includes(s.rarity));
+  }
+  const caseDef = CASES[state.currentCase];
+  return ALL_SKINS.filter(s => caseDef.pool.includes(s.id));
+}
+
+function makeSlot(skinDef) {
+  // В рулетке показываем скины без wear (слот просто предпросмотр)
   const el = document.createElement('div');
-  el.className = 'slot ' + skin.rarity;
+  el.className = 'slot ' + skinDef.rarity;
   el.innerHTML = `
-    <div class="slot-img">${weaponImg(skin.weapon)}</div>
-    <div class="slot-name">${skin.name.split('|')[0].trim()}</div>
-    <div class="slot-wear">${skin.wear}</div>
+    <div class="slot-img">${weaponImg(skinDef.weapon)}</div>
+    <div class="slot-name">${skinDef.name.split('|')[0].trim()}</div>
+    <div class="slot-wear">${skinDef.name.split('|')[1]?.trim() || ''}</div>
   `;
   return el;
 }
@@ -883,27 +929,29 @@ function makeSlot(skin) {
 function mainCaseAction() {
   if (state.isSpinning) return;
   state.isSpinning = true;
-  
+
   const btn = $('spinBtn');
   btn.disabled = true;
   btn.classList.add('disabled');
   btn.textContent = 'Крутим...';
   $('spinResult').className = 'spin-result';
-  
+
   const track = $('track');
-  const winSkin = pickRandomSkin();
-  
+  const pool = getPoolForCurrentCase();
+  const winSkinDef = pickSkinFromPool(pool);
+  const winSkin = createSkinInstance(winSkinDef);
+
   track.innerHTML = '';
   const STOP_INDEX = 50;
   for (let i = 0; i < 60; i++) {
-    let skin;
-    if (i === STOP_INDEX) skin = winSkin;
-    else skin = DEMO_SKINS[Math.floor(Math.random() * DEMO_SKINS.length)];
-    track.appendChild(makeSlot(skin));
+    let skinDef;
+    if (i === STOP_INDEX) skinDef = winSkinDef;
+    else skinDef = pool[Math.floor(Math.random() * pool.length)];
+    track.appendChild(makeSlot(skinDef));
   }
-  
+
   void track.offsetWidth;
-  
+
   const wrap = track.parentElement;
   const wrapW = wrap.clientWidth;
   const targetSlot = track.children[STOP_INDEX];
@@ -911,15 +959,15 @@ function mainCaseAction() {
   const slotRect = targetSlot.getBoundingClientRect();
   const slotCenter = (slotRect.left - trackRect.left) + slotRect.width / 2;
   const targetX = wrapW / 2 - slotCenter;
-  
+
   track.style.transition = 'none';
   track.style.transform = 'translateX(0)';
   void track.offsetWidth;
-  
+
   const duration = 4500;
   track.style.transition = `transform ${duration}ms cubic-bezier(0.12, 0.85, 0.18, 1)`;
   track.style.transform = `translateX(${targetX}px)`;
-  
+
   setTimeout(() => {
     state.isSpinning = false;
     btn.disabled = false;
@@ -927,50 +975,114 @@ function mainCaseAction() {
     btn.textContent = 'Ещё раз';
     $('spinValue').innerHTML = `${rubIco()} ${winSkin.price}`;
     $('spinResult').className = 'spin-result show';
-    toastText('Выпал: ' + winSkin.name);
+
+    // Забираем скин в инвентарь
+    state.inventory.push(winSkin);
+    toastText(`${winSkin.name} (${winSkin.wear}${winSkin.statTrak ? ' ST' : ''})`);
+    updateBalance();
   }, duration + 100);
 }
 
 /* ==================== АПГРЕЙДЕР ==================== */
-function pickFromSkin() {
-  const skin = DEMO_SKINS[Math.floor(Math.random() * DEMO_SKINS.length)];
-  state.upgrade.fromSkin = skin;
-  $('upFromPreview').innerHTML = weaponImg(skin.weapon);
-  $('upFromName').textContent = skin.name;
-  $('upFromWear').textContent = skin.wear;
-  $('upFromPrice').textContent = skin.price + ' ₽';
-  // Сбрасываем целевой скин, если он дешевле нового "твоего"
-  if (state.upgrade.toSkin && state.upgrade.toSkin.price <= skin.price) {
-    state.upgrade.toSkin = null;
-    $('upToPreview').innerHTML = '';
-    $('upToName').textContent = 'Нажми, чтобы выбрать';
-    $('upToWear').textContent = '—';
-    $('upToPrice').textContent = '0 ₽';
+function pickFromInventory() {
+  if (!state.inventory.length) {
+    toastText('Инвентарь пуст');
+    return;
   }
-  updateUpgradeChance();
+  const list = $('modalList');
+  list.innerHTML = '';
+  $('modalTitle').textContent = 'Выбери свой скин';
+
+  state.inventory.forEach((skin, idx) => {
+    const item = document.createElement('div');
+    item.className = 'modal-item';
+    item.innerHTML = `
+      <div class="mi-img">${weaponImg(skin.weapon)}</div>
+      <div class="mi-info">
+        <div class="mi-name">${skin.name}</div>
+        <div class="mi-wear">${skin.wearName}${skin.statTrak ? ' · StatTrak™' : ''}</div>
+      </div>
+      <div class="mi-price">${fmt(skin.price)} ₽</div>
+    `;
+    item.onclick = () => {
+      state.upgrade.fromSkin = skin;
+      state.upgrade.fromIndex = idx;
+      $('upFromPreview').innerHTML = weaponImg(skin.weapon);
+      $('upFromName').textContent = skin.name;
+      $('upFromWear').textContent = skin.wearName + (skin.statTrak ? ' · ST' : '');
+      $('upFromPrice').textContent = skin.price + ' ₽';
+      // Сбрасываем целевой, если он дешевле нового «своего»
+      if (state.upgrade.toSkin && state.upgrade.toSkin.price <= skin.price) {
+        state.upgrade.toSkin = null;
+        $('upToPreview').innerHTML = '';
+        $('upToName').textContent = 'Нажми, чтобы выбрать';
+        $('upToWear').textContent = '—';
+        $('upToPrice').textContent = '0 ₽';
+      }
+      updateUpgradeChance();
+      closeModal();
+    };
+    list.appendChild(item);
+  });
+
+  $('modalOverlay').classList.add('show');
 }
 
-function pickToSkin() {
+function pickToTarget() {
   const from = state.upgrade.fromSkin;
-  // Фильтруем: только скины дороже "твоего"
-  const pool = DEMO_SKINS.filter(s => !from || s.price > from.price);
-  if (!pool.length) {
+  if (!from) {
     toastText('Сначала выбери свой скин');
     return;
   }
-  const skin = pool[Math.floor(Math.random() * pool.length)];
-  state.upgrade.toSkin = skin;
-  $('upToPreview').innerHTML = weaponImg(skin.weapon);
-  $('upToName').textContent = skin.name;
-  $('upToWear').textContent = skin.wear;
-  $('upToPrice').textContent = skin.price + ' ₽';
-  updateUpgradeChance();
+
+  // Фильтр: целевые скины дороже «своего» хотя бы на 1 ₽
+  const candidates = ALL_SKINS.filter(s => s.basePrice > from.price);
+
+  if (!candidates.length) {
+    toastText('Нет скинов дороже твоего');
+    return;
+  }
+
+  const list = $('modalList');
+  list.innerHTML = '';
+  $('modalTitle').textContent = 'Выбери целевой скин';
+
+  candidates.slice(0, 100).forEach(skinDef => {
+    const item = document.createElement('div');
+    item.className = 'modal-item';
+    item.innerHTML = `
+      <div class="mi-img">${weaponImg(skinDef.weapon)}</div>
+      <div class="mi-info">
+        <div class="mi-name">${skinDef.name}</div>
+        <div class="mi-wear">от ${fmt(skinDef.basePrice)} ₽</div>
+      </div>
+      <div class="mi-price">${skinDef.rarity}</div>
+    `;
+    item.onclick = () => {
+      const instance = createSkinInstance(skinDef);
+      state.upgrade.toSkin = instance;
+      $('upToPreview').innerHTML = weaponImg(instance.weapon);
+      $('upToName').textContent = instance.name;
+      $('upToWear').textContent = instance.wearName;
+      $('upToPrice').textContent = instance.price + ' ₽';
+      updateUpgradeChance();
+      closeModal();
+    };
+    list.appendChild(item);
+  });
+
+  $('modalOverlay').classList.add('show');
+}
+
+function closeModal(e) {
+  if (e && e.target !== $('modalOverlay')) return;
+  $('modalOverlay').classList.remove('show');
 }
 
 function updateUpgradeChance() {
   const from = state.upgrade.fromSkin;
   const to = state.upgrade.toSkin;
-  
+
   if (!from || !to) {
     state.upgrade.chance = 0;
     $('upChance').textContent = '0%';
@@ -978,12 +1090,12 @@ function updateUpgradeChance() {
     $('upgradeCircle').style.setProperty('--p', '0%');
     return;
   }
-  
+
   let chance = (from.price / to.price) * 100;
   chance = Math.min(chance, 90);
   chance = Math.max(chance, 1);
   state.upgrade.chance = Math.round(chance);
-  
+
   $('upChance').textContent = state.upgrade.chance + '%';
   $('upgradePercent').innerHTML = state.upgrade.chance + '<span>%</span>';
   $('upgradeCircle').style.setProperty('--p', state.upgrade.chance + '%');
@@ -996,53 +1108,64 @@ function doUpgrade() {
   }
   if (state.isSpinning) return;
   state.isSpinning = true;
-  
+
   const btn = $('upgradeBtn');
   btn.disabled = true;
   btn.classList.add('disabled');
   btn.textContent = 'Крутим...';
-  
+
   const arrow = $('upgradeArrow');
   const success = Math.random() * 100 < state.upgrade.chance;
   const chance = state.upgrade.chance;
-  
+
   let finalAngle;
   const extraSpins = 3;
-  
+
   if (success) {
-    const zoneStart = 0;
     const zoneEnd = (chance / 100) * 360;
-    const finalInZone = zoneStart + Math.random() * (zoneEnd - zoneStart) * 0.9;
-    finalAngle = 360 * extraSpins + finalInZone;
+    finalAngle = 360 * extraSpins + Math.random() * zoneEnd * 0.9;
   } else {
     const zoneEnd = (chance / 100) * 360;
-    const tooFar = zoneEnd + 5 + Math.random() * 40;
     const mode = Math.random() < 0.5 ? 'over' : 'under';
-    
     if (mode === 'over') {
-      finalAngle = 360 * extraSpins + tooFar;
+      finalAngle = 360 * extraSpins + zoneEnd + 5 + Math.random() * 40;
     } else {
-      const under = 360 - (2 + Math.random() * 8);
-      finalAngle = 360 * (extraSpins - 1) + under;
+      finalAngle = 360 * (extraSpins - 1) + 360 - (2 + Math.random() * 8);
     }
   }
-  
+
   arrow.style.transition = 'none';
   arrow.style.transform = `translateX(-50%) rotate(0deg)`;
   void arrow.offsetWidth;
-  
+
   arrow.style.transition = `transform 2.8s cubic-bezier(0.15, 0.7, 0.15, 1)`;
   arrow.style.transform = `translateX(-50%) rotate(${finalAngle}deg)`;
-  
+
   setTimeout(() => {
     state.isSpinning = false;
     btn.disabled = false;
     btn.classList.remove('disabled');
     btn.textContent = 'Прокачать';
-    
+
     if (success) {
+      // Удаляем свой скин, добавляем целевой
+      const idx = state.inventory.findIndex(s => s.id === state.upgrade.fromSkin.id);
+      if (idx >= 0) state.inventory.splice(idx, 1);
+      state.inventory.push(state.upgrade.toSkin);
       toastText('Успех! Получен: ' + state.upgrade.toSkin.name);
-      state.skinsValue += state.upgrade.toSkin.price;
+
+      // Сбрасываем выбор
+      state.upgrade.fromSkin = null;
+      state.upgrade.toSkin = null;
+      $('upFromPreview').innerHTML = '';
+      $('upFromName').textContent = 'Выбрать из инвентаря';
+      $('upFromWear').textContent = '—';
+      $('upFromPrice').textContent = '0 ₽';
+      $('upToPreview').innerHTML = '';
+      $('upToName').textContent = 'Нажми, чтобы выбрать';
+      $('upToWear').textContent = '—';
+      $('upToPrice').textContent = '0 ₽';
+      updateUpgradeChance();
     } else {
       toastText('Провал...');
     }
@@ -1050,10 +1173,29 @@ function doUpgrade() {
   }, 2900);
 }
 
-/* ==================== ПРОЧЕЕ ==================== */
-function applyPromo() { toastText('Промокод: система скоро будет подключена'); }
-function withdrawOpen() { toastText('Вывод: система скоро будет подключена'); }
-function openTopupSheet() { toastText('Пополнение: система скоро будет подключена'); }
+/* ==================== ИНВЕНТАРЬ ==================== */
+function renderInventory() {
+  const list = $('invList');
+  if (!state.inventory.length) {
+    list.innerHTML = '<div class="inv-empty">Инвентарь пуст.<br>Открой кейс, чтобы получить скины.</div>';
+    return;
+  }
+  list.innerHTML = '';
+  state.inventory.forEach(skin => {
+    const el = document.createElement('div');
+    el.className = 'inv-item';
+    el.innerHTML = `
+      <div class="inv-img">${weaponImg(skin.weapon)}</div>
+      <div class="inv-info">
+        <div class="inv-name">${skin.name}</div>
+        <div class="inv-wear">${skin.wearName}</div>
+        ${skin.statTrak ? '<div class="inv-stattrak">StatTrak™</div>' : ''}
+      </div>
+      <div class="inv-price">${fmt(skin.price)} ₽</div>
+    `;
+    list.appendChild(el);
+  });
+}
 
 /* ==================== INIT ==================== */
 renderIcons();
